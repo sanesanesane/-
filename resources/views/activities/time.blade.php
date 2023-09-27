@@ -25,14 +25,16 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="duration">Duration (in minutes)</label>
-                                <input type="number" class="form-control" id="duration" name="duration" placeholder="Enter duration in minutes" required>
+                                <label for="start_time">Start Time</label>
+                                <input type="datetime-local" class="form-control" id="start_time" name="start_time" onchange="calculateEndTime()" required>
                             </div>
 
                             <div class="form-group">
-                                <label for="studied_at">Studied at</label>
-                                <input type="datetime-local" class="form-control" id="studied_at" name="studied_at" required>
+                                <label for="duration">Duration (in minutes)</label>
+                                <input type="number" class="form-control" id="duration" name="duration" onchange="calculateEndTime()" placeholder="Enter duration in minutes" required>
                             </div>
+
+                            <input type="hidden" id="end_time" name="end_time">
 
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>

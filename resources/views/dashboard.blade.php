@@ -15,7 +15,7 @@
                     <a href="{{ route('categories.create') }}" class="text-blue-500 hover:underline">カテゴリを追加</a>
 
                     <!-- アクティビティ記録のリンク -->
-                    <a href="{{ route('activities.create') }}" class="btn btn-primary ml-3">Record Activity</a>
+                    <a href="{{ route('activities.create') }}" class="btn btn-primary ml-3">勉強時間の登録</a>
                     
 <!-- カテゴリ一覧へのリンク -->
 <a href="{{ route('categories.index') }}" class="text-blue-500 hover:underline ml-3">カテゴリ一覧</a>

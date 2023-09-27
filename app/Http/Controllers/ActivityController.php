@@ -18,7 +18,7 @@ class ActivityController extends Controller
 
     public function index()
     {
-        $activities = Activity::all();  // すべてのアクティビティを取得
+        $activities = Activity::all(); 
         return view('activities.index', compact('activities'));
     }
 
@@ -34,18 +34,11 @@ class ActivityController extends Controller
         $endTime = clone $startTime;
         $endTime->modify("+$durationInMinutes minutes");
         $activity->end_time = $endTime;
-
         $activity->save();
-
+        // start_time と studied_at を同じ値に設定
+    $activity->studied_at = $activity->start_time;
         return redirect()->route('activities.index')->with('success', 'Activity recorded successfully!');
     }
-
-    public function editCategory($id)
-    {
-        $category = Category::findOrFail($id);
-        return view('categories.edit', compact('category'));
-    }
-
     public function updateCategory(Request $request, $id)
     {
         $category = Category::findOrFail($id);
@@ -59,58 +52,10 @@ class ActivityController extends Controller
         $category->delete();
         return redirect()->route('categories.index')->with('success', 'Category deleted successfully!');
     }
-
-    public function studyStats()
-    {
-        $chart = Charts::database(Activity::all(), 'line', 'chartjs')
-                       ->groupByDay()
-                       ->elementLabel("Study Time (minutes)");
-
-        $activities = Activity::where('user_id', auth()->id())
-                              ->orderBy('studied_at', 'desc')
-                              ->get();
-
-        $continuousDays = 0;
-        $yesterday = now()->subDay();
-        foreach ($activities as $activity) {
-            if ($activity->studied_at && $activity->studied_at->toDateString() === $yesterday->toDateString()) {
-                $continuousDays++;
-                $yesterday = $yesterday->subDay();
-            } else {
-                break;
-            }
-        }
-
-        $studyDays = $activities->pluck('studied_at')->unique()->count();
-
-        return view('activities.stats', compact('studyDays', 'continuousDays', 'chart'));
-    }
-
-    public function show()
+    public function show($id)
 {
-    $activities = Activity::where('user_id', auth()->id())
-                          ->orderBy('studied_at', 'desc')
-                          ->get();
-
-    $continuousDays = 0;
-    $yesterday = now()->subDay();
-    foreach ($activities as $activity) {
-        if ($activity->studied_at && $activity->studied_at->toDateString() === $yesterday->toDateString()) {
-            $continuousDays++;
-            $yesterday = $yesterday->subDay();
-        } else {
-            break;
-        }
-    }
-
-    $studyDays = $activities->pluck('studied_at')->unique()->count();
-
-    // チャートの作成を追加
-    $chart = Charts::database(Activity::all(), 'line', 'chartjs')
-                   ->groupByDay()
-                   ->elementLabel("Study Time (minutes)");
-
-    return view('activities.stats', compact('continuousDays', 'studyDays', 'activities', 'chart'));
+    $activity = Activity::find($id);
+    return view('activities.show', compact('activity'));
 }
 
 }
