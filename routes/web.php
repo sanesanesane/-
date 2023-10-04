@@ -27,7 +27,7 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
 
-    // プロフィール関連
+// プロフィール関連
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -41,10 +41,18 @@ Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
 
 
-    // 活動（時間）関連
-    Route::resource('activities', ActivityController::class)->except(['create']);
-    Route::get('/activities/create', [ActivityController::class, 'create'])->name('activities.create');
-    Route::get('/activities/stats', [ActivityController::class, 'studyStats'])->name('activities.stats');
+// 活動（時間）関連
+Route::get('/activities/create', [ActivityController::class, 'create'])->name('activities.create');
+Route::post('/activities', [ActivityController::class, 'store'])->name('activities.store');
+Route::get('/activities',[ActivityController::class,'index'])->name('activities.index');
+//統計
+Route::get('/activities/index_show', [ActivityController::class, 'indexShow'])->name('activities.index_show');
+//edit and update
+Route::get('/activities/{id}', [ActivityController::class, 'show'])->name('activities.show');
+Route::get('/activities/{id}/edit', [ActivityController::class, 'edit'])->name('activities.edit');
+Route::put('/activities/{id}', [ActivityController::class, 'update'])->name('activities.update');
+Route::delete('/activities/{id}', [ActivityController::class, 'destroy'])->name('activities.destroy');
+
 });
 
 // 認証関連のルーティング

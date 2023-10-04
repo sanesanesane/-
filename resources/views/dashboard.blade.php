@@ -20,10 +20,11 @@
 <!-- カテゴリ一覧へのリンク -->
 <a href="{{ route('categories.index') }}" class="text-blue-500 hover:underline ml-3">カテゴリ一覧</a>
 
-                    
 
-                    <!-- 勉強時間表示のリンク -->
-                    <a href="{{ route('activities.stats') }}" class="text-blue-500 hover:underline ml-3">勉強時間の統計</a>
+<a href="{{ route('activities.index') }}">勉強時間一覧</a>
+
+<a href="{{ route('activities.index_show') }}">勉強統計</a>
+
 
                 </div>
             </div>
