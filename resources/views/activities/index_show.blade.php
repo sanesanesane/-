@@ -4,6 +4,7 @@
             勉強時間一覧 & グラフ表示
         </h2>
     </x-slot>
+<a href="{{ route('activities.showWeek') }}">週</a>
 
     <div class="container mt-5">
         <!-- 一覧テーブルの表示 -->
@@ -27,15 +28,24 @@
                 @endforeach
             </tbody>
         </table>
+    
         
-        <!-- グラフ表示領域 -->
-        <div>
-            <h2>勉強時間グラフ</h2>
-            <canvas id="studyChart"></canvas>
-        </div>
-    </div>
-    <script>
-    let data = @json($activities);
+<!-- グラフ表示領域 -->
+<div>
+    <h2>勉強時間グラフ</h2>
+    <canvas id="studyChart" width="500" height="500"></canvas>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let raw_data = @json($activities);
+
+    const today = new Date();
+    let data = raw_data.filter(activity => {
+        const activityDate = new Date(activity.studied_at);
+        return activityDate.getDate() === today.getDate() &&
+               activityDate.getMonth() === today.getMonth() &&
+               activityDate.getFullYear() === today.getFullYear();
+    });
 
     let labels = ["今日の勉強時間"];
     let datasets = [];

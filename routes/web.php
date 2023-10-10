@@ -47,6 +47,11 @@ Route::post('/activities', [ActivityController::class, 'store'])->name('activiti
 Route::get('/activities',[ActivityController::class,'index'])->name('activities.index');
 //統計
 Route::get('/activities/index_show', [ActivityController::class, 'indexShow'])->name('activities.index_show');
+Route::get('activities/week', [ActivityController::class, 'showWeek'])->name('activities.showWeek');
+Route::get('activities/month', [ActivityController::class, 'showMonth'])->name('activities.showMonth');
+
+
+
 //edit and update
 Route::get('/activities/{id}', [ActivityController::class, 'show'])->name('activities.show');
 Route::get('/activities/{id}/edit', [ActivityController::class, 'edit'])->name('activities.edit');

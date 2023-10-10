@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Activity;
 use ConsoleTVs\Charts\Classes\Chartjs\Chart;
+use Illuminate\Support\Carbon; 
+
 
 
 class ActivityController extends Controller
@@ -64,12 +66,38 @@ public function destroy($id)
     $activity->delete();
     return redirect()->route('activities.index')->with('success', 'Activity deleted successfully!');
 }
+
 public function indexShow()
 {
-    $activities = Activity::all();
-    
-    
+    $today = Carbon::today();  // 今日の日付を取得
+    $activities = Activity::whereDate('studied_at', $today)->get();
+
     return view('activities.index_show', compact('activities'));
+}
+
+public function showWeek(Request $request)
+{
+    $endOfWeek = new Carbon();
+    if($request->input('base_date')){
+        $endOfWeek = new Carbon($request->input('base_date'));
+    }
+    $startOfWeek = $endOfWeek->subWeek();
+
+    $activities = Activity::where('studied_at', '>=',$startOfWeek)
+    ->where('studied_at', '=<',$endOfWeek)
+    ->orderBy('studied_at', 'asc')->get();
+
+    return view('activities.show_week', compact('activities'));
+}
+
+public function showMonth()
+{
+    $endOfMonth = Carbon::today();
+    $startOfMonth = Carbon::today()->subMonth();
+    
+    $activities = Activity::where('studied_at', '>=', now()->subDays(30))->orderBy('studied_at', 'asc')->get();
+    
+    return view('activities.show_month', compact('activities'));
 }
 
 
