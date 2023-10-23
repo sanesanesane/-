@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ActivityController;
-
+use App\Http\Controllers\GroupController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -58,7 +58,19 @@ Route::get('/activities/{id}/edit', [ActivityController::class, 'edit'])->name('
 Route::put('/activities/{id}', [ActivityController::class, 'update'])->name('activities.update');
 Route::delete('/activities/{id}', [ActivityController::class, 'destroy'])->name('activities.destroy');
 
+//グループ関連
+Route::get('/groups/dashboard', [GroupController::class, 'dashboard'])->name('groups.dashboard');
+Route::get('/groups/index', [GroupController::class, 'index'])->name('groups.index');
+Route::get('/groups/create', [GroupController::class, 'create'])->name('groups.create');
+Route::post('/groups/store', [GroupController::class, 'store'])->name('groups.store');
+Route::get('/groups/search', [GroupController::class, 'search'])->name('groups.search');
+Route::get('/groups/search-results',[GroupController::class, 'searchresults'] )->name('groups.searchresults');
+
+
 });
+
+//グループ機能関連
+
 
 // 認証関連のルーティング
 require __DIR__.'/auth.php';

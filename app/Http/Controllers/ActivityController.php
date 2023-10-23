@@ -84,7 +84,7 @@ public function showWeek(Request $request)
     $startOfWeek = $endOfWeek->subWeek();
 
     $activities = Activity::where('studied_at', '>=',$startOfWeek)
-    ->where('studied_at', '=<',$endOfWeek)
+    ->where('studied_at', '<=',$endOfWeek)
     ->orderBy('studied_at', 'asc')->get();
 
     return view('activities.show_week', compact('activities'));
