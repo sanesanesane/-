@@ -9,7 +9,8 @@
         <form action="{{ route('groups.searchresults') }}" method="get">
             <div class="form-group">
                 <label for="groupId">グループID:</label>
-                <input type="text" class="form-control" id="groupId" name="groupId" required>
+                <input type="text" class="form-control" id="groupId" name="id" required>
+
             </div>
             <button type="submit" class="btn btn-primary">検索</button>
         </form>

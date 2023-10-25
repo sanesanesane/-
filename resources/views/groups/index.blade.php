@@ -10,13 +10,16 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <ul>
-                        @foreach($groups as $group)
-                        <li class="mb-4">
-                            <a href="{{ route('groups.show', $group->id) }}" class="text-blue-500 hover:underline">
-                                {{ $group->name }}
-                            </a>
-                        </li>
-                        @endforeach
+                        
+@foreach($groups as $group)
+    <li class="mb-4">
+        <a href="{{ route('groups.show', $group->id) }}" class="text-blue-500 hover:underline">
+            {{ $group->name }} (ID: {{ $group->id }}) - Role: {{ ucfirst($group->pivot_role) }}
+        </a>
+    </li>
+@endforeach
+
+
                     </ul>
                 </div>
             </div>

@@ -63,13 +63,19 @@ Route::get('/groups/dashboard', [GroupController::class, 'dashboard'])->name('gr
 Route::get('/groups/index', [GroupController::class, 'index'])->name('groups.index');
 Route::get('/groups/create', [GroupController::class, 'create'])->name('groups.create');
 Route::post('/groups/store', [GroupController::class, 'store'])->name('groups.store');
+
 Route::get('/groups/search', [GroupController::class, 'search'])->name('groups.search');
 Route::get('/groups/search-results',[GroupController::class, 'searchresults'] )->name('groups.searchresults');
-
+Route::get('/groups/{group}/show', [GroupController::class, 'show'])->name('groups.show');
+Route::post('/groups/{group}/join', [GroupController::class, 'join'])->name('groups.join');
+Route::delete('/groups/{group}/leave', [GroupController::class, 'leave'])->name('groups.leave');
+Route::delete('/groups/{group}', [GroupController::class, 'destroy'])->name('groups.destroy');
+Route::get('/groups/{group}/edit', [GroupController::class, 'edit'])->name('groups.edit');
+Route::put('/groups/{group}/update', [GroupController::class, 'update'])->name('groups.update');
 
 });
 
-//グループ機能関連
+//グループメンバー機能関連
 
 
 // 認証関連のルーティング
