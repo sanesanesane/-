@@ -30,15 +30,33 @@ class ActivityController extends Controller
         $activity->user_id = auth()->id();
 
         $startTime = new \DateTime($request->input('studied_at'));
+        
         $activity->start_time = $startTime;
 
         $durationInMinutes = $request->input('duration');
+        
         $endTime = clone $startTime;
+        
         $endTime->modify("+$durationInMinutes minutes");
+        
         $activity->end_time = $endTime;
         // start_time と studied_at を同じ値に設定
-    $activity->studied_at = $activity->start_time;
-    $activity->save();
+        $activity->studied_at = $activity->start_time;
+        
+            // reflect がチェックされていない場合は、false を設定する
+        $data['reflect'] = $request->has('reflect');
+
+        $activity = Activity::create($data);
+
+        // リフレクトが有効の場合、グループに反映するロジックを追加
+    if ($data['reflect']) {
+        
+    }
+        
+        
+        $activity->save();
+    
+    
         return redirect()->route('activities.index')->with('success', 'Activity recorded successfully!');
     }
 public function show($id)

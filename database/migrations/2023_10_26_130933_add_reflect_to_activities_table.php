@@ -13,9 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('group_members', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('activities', function (Blueprint $table) {
+           $table->boolean('reflect')->default(false); // デフォルト値をfalseに設定
         });
     }
 
@@ -26,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('group_members');
+        Schema::table('activities', function (Blueprint $table) {
+        $table->dropColumn('reflect');
+        });
     }
 };

@@ -150,9 +150,20 @@ public function show(Group $group)
 {
     $user_id = auth()->id();
 
-    // 現在のユーザーの役割を取得
-    $role = $group->members()->where('user_id', $user_id)->first()->pivot->role ?? null;
-    dd($role); 
+
+    // 特定のグループに関連する全てのメンバーの情報をダンプ
+    $members = $group->members()->get();
+
+
+    // 特定のグループに属する現在のユーザーの情報をダンプ
+    $member = $group->members()->where('user_id', $user_id)->first();
+    
+
+    // 特定のグループに属する現在のユーザーの役割をダンプ
+    $role = $member->pivot->role ?? null;
+  
+
+    // 現在のユーザーの役割に基づいて処理
     if ($role == 'host') {
         $currentUserRole = 'host';
     } elseif ($role == 'member') {

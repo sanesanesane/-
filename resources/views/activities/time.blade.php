@@ -33,6 +33,12 @@
                                 <label for="duration">Duration (in minutes)</label>
                                 <input type="number" class="form-control" id="duration" name="duration" onchange="calculateEndTime()" placeholder="Enter duration in minutes" required>
                             </div>
+                            
+                            <div class="form-group">
+                            <input type="checkbox" id="reflect" name="reflect" value="1" {{ old('reflect', $activity->reflect) ? 'checked' : '' }}>
+                            <label for="reflect">グループに反映する</label>
+                            </div>
+
 
                             <input type="hidden" id="end_time" name="end_time">
 

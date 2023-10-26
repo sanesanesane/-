@@ -20,7 +20,8 @@ class Activity extends Model
         'start_time',
         'end_time',
         'description',
-        'studied_at'
+        'studied_at',
+        'reflect',
     ];
 
     /**

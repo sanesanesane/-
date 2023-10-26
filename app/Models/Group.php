@@ -14,21 +14,28 @@ class Group extends Model
     use SoftDeletes;
     protected $fillable = ['name', 'description', 'user_id'];
     
+
     public function members()
-{
-    return $this->hasMany(GroupMember::class);
-}
+    {
+        return $this->belongsToMany(User::class, 'group_members')->withPivot('role');
+    }
+
+    public function groupMembers()
+    {
+        return $this->hasMany(GroupMember::class);
+    }
+
 
 public function edit(Group $group)
 {
     $this->authorize('update', $group);
     
 }
+
 public function users()
 {
     return $this->belongsToMany(User::class, 'group_members')->withPivot('role');
 }
-
 
 }
 
