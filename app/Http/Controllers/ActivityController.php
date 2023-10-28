@@ -23,42 +23,49 @@ class ActivityController extends Controller
         $activities = Activity::all(); 
         return view('activities.index', compact('activities'));
     }
+public function store(Request $request)
+{
+    $activity = new Activity();
+    $activity->user_id = auth()->id();
+    $activity->category_id = $request->input('category_id');
+    
+    $startTime = new \DateTime($request->input('start_time'));
+    
+    $activity->start_time = $startTime;
 
-    public function store(Request $request)
-    {
-        $activity = new Activity($request->all());
-        $activity->user_id = auth()->id();
+    $durationInMinutes = $request->input('duration');
+    
+    $endTime = clone $startTime;
+    
+    $endTime->modify("+$durationInMinutes minutes");
+    
+    $activity->end_time = $endTime;
+    // start_time と studied_at を同じ値に設定
+    $activity->studied_at = $activity->start_time;
 
-        $startTime = new \DateTime($request->input('studied_at'));
-        
-        $activity->start_time = $startTime;
+    // reflect がチェックされているかどうかを確認
+    $activity->reflect = $request->has('reflect');
 
-        $durationInMinutes = $request->input('duration');
-        
-        $endTime = clone $startTime;
-        
-        $endTime->modify("+$durationInMinutes minutes");
-        
-        $activity->end_time = $endTime;
-        // start_time と studied_at を同じ値に設定
-        $activity->studied_at = $activity->start_time;
-        
-            // reflect がチェックされていない場合は、false を設定する
-        $data['reflect'] = $request->has('reflect');
+    $activity->save();
 
-        $activity = Activity::create($data);
+    if ($activity->reflect) {
+        // ユーザーが所属しているすべてのグループを取得
+        $groups = auth()->user()->groups;
 
-        // リフレクトが有効の場合、グループに反映するロジックを追加
-    if ($data['reflect']) {
-        
+        foreach ($groups as $group) {
+            // total_study_time を更新して保存
+            $group->total_study_time += $durationInMinutes;
+            $group->save();
+
+        }
     }
-        
-        
-        $activity->save();
+    
+    return redirect()->route('activities.index')->with('success', 'Activity recorded successfully!');
+}
+
+
     
     
-        return redirect()->route('activities.index')->with('success', 'Activity recorded successfully!');
-    }
 public function show($id)
 {
     $activity = Activity::find($id);
@@ -73,17 +80,49 @@ public function edit($id)
 
 public function update(Request $request, $id)
 {
-    $activity = Activity::findOrFail($id);
+    $activity = Activity::findOrFail($id); // 最初に$activityを取得
+    $oldDuration = $activity->duration;    // その後に$oldDurationを取得
+
     $activity->update($request->all());
+    
+    // reflect属性の更新
+    $activity->reflect = $request->has('reflect');
+    $activity->save();
+    
+    // 反映設定がオンの場合のみグループに反映
+    if ($activity->reflect) {
+        $durationDifference = $activity->duration - $oldDuration; // 差分を計算
+
+        $groups = auth()->user()->groups;
+        
+        foreach ($groups as $group) {
+            $group->total_study_time += $durationDifference;
+            $group->save();
+        }
+    }
+    
     return redirect()->route('activities.index')->with('success', 'Activity updated successfully!');
 }
 
 public function destroy($id)
 {
+    
     $activity = Activity::findOrFail($id);
+    $activity->delete();
+    
+    if ($activity->reflect) {
+        $groups = auth()->user()->groups;
+        foreach ($groups as $group) {
+            $group->total_study_time -= $activity->duration; // durationを引く
+            $group->save();
+        }
+    }
+
     $activity->delete();
     return redirect()->route('activities.index')->with('success', 'Activity deleted successfully!');
 }
+
+    
 
 public function indexShow()
 {

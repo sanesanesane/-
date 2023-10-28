@@ -35,8 +35,14 @@
                 <label for="description">内容</label>
                 <textarea class="form-control" id="description" name="description">{{ $activity->description }}</textarea>
             </div>
-
-            <button type="submit" class="btn btn-primary">更新</button>
+            
+            <div class="form-group">
+    　　　　　　　　<input type="checkbox" id="reflect" name="reflect" value="1" {{ $activity->reflect ? 'checked' : '' }}>
+    　　　　　　　　<label for="reflect">グループに反映する</label>
+　　　　　　</div>
+　　　　　　<div>
+　　　　　　    <button type="submit" class="btn btn-primary">更新</button>
+　　　　　　</div>
         </form>
     </div>
 </x-app-layout>

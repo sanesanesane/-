@@ -175,5 +175,16 @@ public function show(Group $group)
     return view('groups.show', compact('group', 'currentUserRole'));
 }
 
+public function statistics($groupId)
+{
+    $group = Group::findOrFail($groupId);
+    // その他の統計データもここで取得できます。
+
+    return view('groups.statistics', compact('group'));
+}
+
+
+
+
     
 }

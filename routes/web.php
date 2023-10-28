@@ -72,10 +72,16 @@ Route::delete('/groups/{group}/leave', [GroupController::class, 'leave'])->name(
 Route::delete('/groups/{group}', [GroupController::class, 'destroy'])->name('groups.destroy');
 Route::get('/groups/{group}/edit', [GroupController::class, 'edit'])->name('groups.edit');
 Route::put('/groups/{group}/update', [GroupController::class, 'update'])->name('groups.update');
+Route::get('/groups/{group}/statistics',[GroupController::class,'statistics'])->name('groups.statistics');
+
+//グループメンバー関連
+
+
+
 
 });
 
-//グループメンバー機能関連
+
 
 
 // 認証関連のルーティング

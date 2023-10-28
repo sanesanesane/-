@@ -35,7 +35,9 @@
                             </div>
                             
                             <div class="form-group">
-                            <input type="checkbox" id="reflect" name="reflect" value="1" {{ old('reflect', $activity->reflect) ? 'checked' : '' }}>
+                            
+                            <input type="checkbox" id="reflect" name="reflect" value="1" {{ old('reflect') ? 'checked' : '' }}>
+                            
                             <label for="reflect">グループに反映する</label>
                             </div>
 
