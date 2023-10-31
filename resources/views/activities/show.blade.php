@@ -18,11 +18,13 @@
         <div class="mb-3">
             <strong>内容:</strong> {{ $activity->description ?? '未記入' }}
         </div>
+        @if(auth()->id() === $activity->user_id)
         <a href="{{ route('activities.edit', $activity->id) }}" class="btn btn-primary">編集</a>
         <form action="{{ route('activities.destroy', $activity->id) }}" method="POST" class="d-inline">
             @csrf
             @method('DELETE')
             <button type="submit" class="btn btn-danger">削除</button>
         </form>
+        @endif
     </div>
 </x-app-layout>

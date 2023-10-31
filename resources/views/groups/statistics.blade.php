@@ -5,15 +5,22 @@
         </h2>
     </x-slot>
 
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">{{ $group->name }}</div>
-                    <div class="card-body">
-                        <p>総勉強時間: {{ $group->total_study_time }} 分</p>
-                        <!-- 他の詳細情報もここに追加できます -->
-                    </div>
+   <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    @foreach($stats as $period => $data)
+                        <div class="mb-6">
+                            <h3 class="text-lg font-bold mb-4">{{ ucfirst($period) }} Statistics</h3>
+                            <ul>
+                                <li><strong>Total Study Time:</strong> {{ $data['total'] }} minutes</li>
+                                <li><strong>Average Study Time:</strong> {{ $data['average'] }} minutes</li>
+                                <li><strong>Median Study Time:</strong> {{ $data['median'] }} minutes</li>
+                                <li><strong>Top Studying User:</strong> {{ $data['topUser']->name }}</li>
+                            </ul>
+                        </div>
+                    @endforeach
+                    
                 </div>
             </div>
         </div>

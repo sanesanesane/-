@@ -13,8 +13,6 @@
             <h2>{{ $group->description }}</h2>  
             
         </div>
-
-        
         
 
         @if($currentUserRole == 'host')
@@ -27,6 +25,10 @@
             
             <div>
                 <a href="{{ route('groups.statistics', $group->id) }}">統計を見る</a>
+            </div>
+            
+            <div>
+             <a href="{{ route('group.members.index', $group) }}">メンバー一覧を表示</a>
             </div>
             
             <div>
@@ -49,8 +51,15 @@
             <div>
             <p>あなたはこのグループのメンバーです。</p>
             </div>
-
-
+            
+            <div>
+                <a href="{{ route('groups.statistics', $group->id) }}">統計を見る</a>
+            </div>
+            <div>
+                
+                <a href="{{ route('group.members.index', $group) }}">メンバー一覧を表示</a>
+ 
+            </div>
             <div>
                 <form action="{{ route('groups.leave', $group->id) }}" method="post" onsubmit="return confirm('本当にこのグループを脱退しますか？');">
                 @csrf

@@ -47,5 +47,10 @@ class Activity extends Model
         return $this->belongsTo('App\Models\Category');
     }
 
-    // その他のメソッドやリレーションは必要に応じて追加してください。
+public function groups()
+{
+    return $this->belongsToMany(Group::class, 'group_activities');
+}
+
+
 }

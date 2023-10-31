@@ -178,10 +178,49 @@ public function show(Group $group)
 public function statistics($groupId)
 {
     $group = Group::findOrFail($groupId);
-    // その他の統計データもここで取得できます。
 
-    return view('groups.statistics', compact('group'));
+    // 仮定：GroupモデルとActivityモデルはリレーションが組まれているとします。
+    $activitiesToday = $group->activities()->whereDate('studied_at', now())->get();
+    $activitiesWeek = $group->activities()->whereBetween('studied_at', [now()->startOfWeek(), now()->endOfWeek()])->get();
+    $activitiesMonth = $group->activities()->whereBetween('studied_at', [now()->startOfMonth(), now()->endOfMonth()])->get();
+
+    // 今日、今週、今月の統計を計算
+    $statsToday = $this->calculateStats($activitiesToday);
+    $statsWeek = $this->calculateStats($activitiesWeek);
+    $statsMonth = $this->calculateStats($activitiesMonth);
+
+    return view('groups.statistics', compact('group', 'statsToday', 'statsWeek', 'statsMonth'));
 }
+
+protected function calculateStats($activities)
+{
+    $totalTime = $activities->sum('duration');
+    $averageTime = $activities->avg('duration');
+    $medianTime = $this->calculateMedian($activities->pluck('duration')->toArray());
+
+    $mostStudiousUser = $activities->groupBy('user_id')->sortByDesc(fn($activity) => $activity->sum('duration'))->first()->first()->user->name;
+
+    return [
+        'total' => $totalTime,
+        'average' => $averageTime,
+        'median' => $medianTime,
+        'most_studious' => $mostStudiousUser,
+    ];
+}
+
+protected function calculateMedian($values)
+{
+    sort($values);
+    $count = count($values);
+    $middle = floor($count / 2);
+
+    if ($count % 2) {
+        return $values[$middle];
+    }
+
+    return ($values[$middle - 1] + $values[$middle]) / 2;
+}
+
 
 
 

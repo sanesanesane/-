@@ -33,9 +33,14 @@ class CategoryController extends Controller
         return redirect()->route('categories.index')->with('success', 'Category created successfully.');
     }
 
+
     public function index()
-    {
-        $categories = Category::all();
+{
+
+    $userId = auth()->id();
+
+    $categories = Category::where('user_id', $userId)->get();
+
         return view('categories.index', ['categories' => $categories]);
     }
     

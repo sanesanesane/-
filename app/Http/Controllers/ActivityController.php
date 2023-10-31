@@ -14,14 +14,20 @@ class ActivityController extends Controller
 {
     public function create()
     {
-        $categories = Category::all();
+        
+    $userId = auth()->id();
+    
+    $categories = Category::where('user_id', $userId)->get();
         return view('activities.time', compact('categories'));
     }
 
     public function index()
     {
-        $activities = Activity::all(); 
-        return view('activities.index', compact('activities'));
+    $userId = auth()->id();
+    
+    $activities = Activity::where('user_id', $userId)->get();
+
+    return view('activities.index', compact('activities'));
     }
 public function store(Request $request)
 {
@@ -98,29 +104,32 @@ public function update(Request $request, $id)
         foreach ($groups as $group) {
             $group->total_study_time += $durationDifference;
             $group->save();
+            +$group->refresh();
+            
         }
     }
     
     return redirect()->route('activities.index')->with('success', 'Activity updated successfully!');
 }
 
+
 public function destroy($id)
 {
-    
     $activity = Activity::findOrFail($id);
-    $activity->delete();
-    
     if ($activity->reflect) {
         $groups = auth()->user()->groups;
         foreach ($groups as $group) {
             $group->total_study_time -= $activity->duration; // durationを引く
             $group->save();
+            +$group->refresh();
         }
     }
 
     $activity->delete();
     return redirect()->route('activities.index')->with('success', 'Activity deleted successfully!');
 }
+
+
 
     
 

@@ -36,6 +36,11 @@ public function users()
 {
     return $this->belongsToMany(User::class, 'group_members')->withPivot('role');
 }
+public function activities()
+{
+    return $this->belongsToMany(Activity::class, 'group_activities');
+}
+
 
 }
 

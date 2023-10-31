@@ -6,6 +6,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\GroupMemberController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -75,6 +78,12 @@ Route::put('/groups/{group}/update', [GroupController::class, 'update'])->name('
 Route::get('/groups/{group}/statistics',[GroupController::class,'statistics'])->name('groups.statistics');
 
 //グループメンバー関連
+Route::get('/groups/{group}/members', [GroupMemberController::class,'index'])->name('group.members.index');
+Route::get('/groups/{group}/members/{user}/activities', [GroupMemberController::class, 'showActivities'])->name('group.members.activities');
+
+
+
+
 
 
 
