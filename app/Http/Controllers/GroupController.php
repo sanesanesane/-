@@ -61,7 +61,17 @@ public function store(Request $request)
      'joined_at' => Carbon::now()
     ]);
     
+        // ユーザーのアクティビティの合計時間をグループの合計勉強時間に追加
+    $reflectActivities = auth()->user()->activities()->where('reflect', true)->get();
+    $totalUserStudyTime = $reflectActivities->sum('duration');
+    
+    foreach ($reflectActivities as $activity) {
+        $group->activities()->attach($activity->id);  // アクティビティをグループに関連付け
+    }
 
+    $group->total_study_time += $totalUserStudyTime;
+    $group->save();
+    
     return redirect()->route('groups.index')->with('success', 'グループを作成しました。');
 }
 
@@ -88,6 +98,21 @@ public function searchresults(Request $request)  // ここでRequest $requestを
     
     public function join(Group $group)
 {
+     // 1. ユーザーのアクティビティを取得
+    $reflectActivities = auth()->user()->activities()->where('reflect', true)->get();
+
+    // 2. アクティビティの合計時間を計算
+    $totalUserStudyTime = $reflectActivities->sum('duration');
+    
+    // 3. その時間をグループの合計勉強時間に加算
+    $group->total_study_time += $totalUserStudyTime;
+    $group->save();
+
+    // 4. ユーザーのアクティビティをグループに関連付け
+    foreach ($reflectActivities as $activity) {
+        $group->activities()->attach($activity->id);
+    }
+    
     $group->users()->attach(auth()->id(), ['role' => 'member','joined_at' => now()]);
     return redirect()->route('groups.show', $group->id)->with('success', 'グループに加入しました。');
 }
@@ -96,6 +121,20 @@ public function searchresults(Request $request)  // ここでRequest $requestを
 public function leave(Group $group)
 {
     $group->users()->detach(auth()->id());
+    
+    // ユーザーのアクティビティの合計時間をグループの合計勉強時間から減算
+    $reflectActivities = auth()->user()->activities()->where('reflect', true)->get();
+    $totalUserStudyTime = $reflectActivities->sum('duration');
+
+    foreach ($reflectActivities as $activity) {
+        $group->activities()->detach($activity->id);  // アクティビティの関連付けを解除
+    }
+
+    $group->total_study_time -= $totalUserStudyTime;
+    $group->save();
+
+    $group->users()->detach(auth()->id());
+
     return redirect()->route('groups.index')->with('success', 'グループを脱退しました。');
 }
 
@@ -189,8 +228,16 @@ public function statistics($groupId)
     $statsWeek = $this->calculateStats($activitiesWeek);
     $statsMonth = $this->calculateStats($activitiesMonth);
 
-    return view('groups.statistics', compact('group', 'statsToday', 'statsWeek', 'statsMonth'));
+    // 今日、今週、今月の統計を$stats配列にまとめる
+    $stats = [
+        'today' => $statsToday,
+        'week' => $statsWeek,
+        'month' => $statsMonth
+    ];
+
+    return view('groups.statistics', compact('group', 'stats'));
 }
+
 
 protected function calculateStats($activities)
 {
@@ -210,6 +257,10 @@ protected function calculateStats($activities)
 
 protected function calculateMedian($values)
 {
+    if (empty($values)) {
+        return 0; // または null や適切なデフォルト値
+    }
+
     sort($values);
     $count = count($values);
     $middle = floor($count / 2);
@@ -220,8 +271,6 @@ protected function calculateMedian($values)
 
     return ($values[$middle - 1] + $values[$middle]) / 2;
 }
-
-
 
 
 

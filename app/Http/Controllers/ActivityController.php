@@ -59,12 +59,12 @@ public function store(Request $request)
         $groups = auth()->user()->groups;
 
         foreach ($groups as $group) {
-            // total_study_time を更新して保存
             $group->total_study_time += $durationInMinutes;
             $group->save();
-
-        }
+            
+            $group->activities()->attach($activity->id);
     }
+        }
     
     return redirect()->route('activities.index')->with('success', 'Activity recorded successfully!');
 }
@@ -104,8 +104,9 @@ public function update(Request $request, $id)
         foreach ($groups as $group) {
             $group->total_study_time += $durationDifference;
             $group->save();
-            +$group->refresh();
             
+            $group->activities()->attach($activity->id);
+            $group->refresh();
         }
     }
     
@@ -121,7 +122,9 @@ public function destroy($id)
         foreach ($groups as $group) {
             $group->total_study_time -= $activity->duration; // durationを引く
             $group->save();
-            +$group->refresh();
+            
+            $group->activities()->detach($activity->id);
+            $group->refresh();
         }
     }
 
