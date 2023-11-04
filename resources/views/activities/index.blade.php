@@ -8,6 +8,11 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
+            <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    
                 <div class="card">
                     <div class="card-header">勉強時間のリスト</div>
 
@@ -16,9 +21,8 @@
                             <thead
                                 <tr>
                                     <th>カテゴリ</th>
-                                    <th>開始時間</th>
-                                    <th>終了時間</th>
-                                    
+                                    <th>日付</th>
+                                    <th>勉強時間</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -26,9 +30,8 @@
                                 
                                 <tr>
                                     <td>{{ $activity->category ? $activity->category->name : 'カテゴリなし' }}</td>
-
                                     <td>{{ $activity->start_time }}</td>
-                                    <td>{{ $activity->end_time }}</td>
+                                    <td>{{ $activity->doration}}</td>
                                     <td>
                                         <a href="{{ route('activities.edit', $activity->id) }}" class="btn btn-primary btn-sm">編集</a>
                                         <form action="{{ route('activities.destroy', $activity->id) }}" method="POST" style="display: inline;">

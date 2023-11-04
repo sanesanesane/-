@@ -30,7 +30,7 @@ class CategoryController extends Controller
         $category->user_id = auth()->id();
         $category->save();
 
-        return redirect()->route('categories.index')->with('success', 'Category created successfully.');
+        return redirect()->route('categories.index')->with('success', '登録完了しました！');
     }
 
 
@@ -53,13 +53,13 @@ public function edit(Category $category)
 public function update(Request $request, Category $category)
 {
     $category->update($request->all());
-    return redirect()->route('categories.index')->with('success', 'Category updated successfully!');
+    return redirect()->route('categories.index')->with('success', '名前変更完了しました！');
 }
 
 public function destroy(Category $category)
 {
     $category->delete();
-    return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
+    return redirect()->route('categories.index')->with('success', 'カテゴリ削除しました！');
 }
 
 
