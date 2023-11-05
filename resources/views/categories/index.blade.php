@@ -9,12 +9,15 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    
+                    <div class="mb-5">
+                        
                     <a href="{{ route('categories.create') }}" >
                     <x-danger-button>
                         新しいカテゴリを追加
                     </x-danger-button>
                     </a>
+                    
+                    </div>
                     
                     @if(session('success'))
                         <div class="alert alert-success">

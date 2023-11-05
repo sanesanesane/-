@@ -22,6 +22,7 @@ class Activity extends Model
         'description',
         'studied_at',
         'reflect',
+        
     ];
 
     /**
@@ -51,6 +52,21 @@ public function groups()
 {
     return $this->belongsToMany(Group::class, 'group_activities');
 }
+/**
+ * 勉強時間の期間を分で取得するアクセサ。
+ *
+ * @return int
+ */
+public function getDurationAttribute() 
+{
+    if ($this->start_time && $this->end_time) {
+        return $this->end_time->diffInMinutes($this->start_time);
+    }
+
+    return 0;
+}
+
+
 
 
 }
