@@ -79,7 +79,7 @@
                                     <a href="{{ route('activities.show', $activity->id) }}" class="inline-flex mr-3">
                                       <x-danger-button>
                                           詳細
-                                            </x-danger-button>
+                                        </x-danger-button>
                                         </a>
                                     <a href="{{ route('activities.edit', $activity->id) }}" class="inline-flex">
                                       <x-edit-button>

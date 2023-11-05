@@ -5,32 +5,53 @@
         </h2>
     </x-slot>
 
-    <div class="container">
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
 
-        <!-- エラーメッセージの表示部分をここに追加 -->
-        @if($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-        <!-- エラーメッセージの表示部分の終わり -->
+                    <!-- エラーメッセージ -->
+                    @if($errors->any())
+                        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                            <strong class="font-bold">エラー</strong>
+                            <span class="block sm:inline">
+                                @foreach ($errors->all() as $error)
+                                    {{ $error }}
+                                @endforeach
+                            </span>
+                        </div>
+                    @endif
 
-        <form action="{{ route('groups.store') }}" method="post">
-            @csrf
-            <div class="form-group">
-                <label for="name">グループ名:</label>
-                <input type="text" class="form-control" id="name" name="name" required>
+                    <!-- グループ作成フォーム -->
+                    <form action="{{ route('groups.store') }}" method="POST" class="w-full max-w-lg">
+                        @csrf
+                        <div class="flex flex-wrap -mx-3 mb-6">
+                            <div class="w-full px-3">
+                                <label for="name" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                                    グループ名:
+                                </label>
+                                <input type="text" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="name" name="name" required>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap -mx-3 mb-6">
+                            <div class="w-full px-3">
+                                <label for="description" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                                    グループの説明:
+                                </label>
+                                <textarea class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="description" name="description" rows="3" required></textarea>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <x-danger-button type="submit">
+                                グループを作成
+                            </x-danger-button>
+                        </div>
+                    </form>
+
+                </div>
             </div>
-            <div class="form-group">
-                <label for="description">グループの説明:</label>
-                <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">グループを作成</button>
-        </form>
+        </div>
     </div>
 </x-app-layout>
-

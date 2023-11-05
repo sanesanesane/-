@@ -5,77 +5,64 @@
         </h2>
     </x-slot>
 
-    <div class="container">
-        <div>
-            <h2>{{ $group->name }}</h2>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+
+                    <div class="mb-4">
+                        <strong>グループ名:</strong> {{ $group->name }}
+                    </div>
+                    <div class="mb-4">
+                        <strong>説明:</strong> {{ $group->description }}
+                    </div>
+                    
+                    <!-- アクションボタン -->
+                    <div class="flex space-x-4 mt-5">
+                        @if($currentUserRole == 'host')
+                            <!-- ホストのアクション -->
+                            <x-danger-button onclick="location.href='{{ route('groups.statistics', $group->id) }}'">
+                                統計を見る
+                            </x-danger-button>
+                            <x-danger-button onclick="location.href='{{ route('group.members.index', $group) }}'">
+                                メンバー一覧を表示
+                            </x-danger-button>
+                            <x-danger-button onclick="location.href='{{ route('groups.edit', $group->id) }}'">
+                                グループを編集
+                            </x-danger-button>
+                            <form action="{{ route('groups.destroy', $group->id) }}" method="post" onsubmit="return confirm('本当にグループを削除しますか？');">
+                                @csrf
+                                @method('DELETE')
+                                <x-secondary-button type="submit">
+                                    グループを削除
+                                </x-secondary-button>
+                            </form>
+                        @elseif($currentUserRole == 'member')
+                            <!-- メンバーのアクション -->
+                            <x-danger-button onclick="location.href='{{ route('groups.statistics', $group->id) }}'">
+                                統計を見る
+                            </x-danger-button>
+                            <x-danger-button onclick="location.href='{{ route('group.members.index', $group) }}'">
+                                メンバー一覧を表示
+                            </x-danger-button>
+                            <form action="{{ route('groups.leave', $group->id) }}" method="post" onsubmit="return confirm('本当にこのグループを脱退しますか？');">
+                                @csrf
+                                <x-secondary-button type="submit">
+                                    グループを脱退
+                                </x-secondary-button>
+                            </form>
+                        @else
+                            <!-- 非メンバーのアクション -->
+                            <form action="{{ route('groups.join', $group->id) }}" method="post">
+                                @csrf
+                                <x-danger-button type="submit">
+                                    このグループに加入
+                                </x-danger-button>
+                            </form>  
+                        @endif
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
-            <h2>{{ $group->description }}</h2>  
-            
-        </div>
-        
-
-        @if($currentUserRole == 'host')
-
-
-            <div>
-                <p>あなたはこのグループのホストです。</p>
-                
-            </div>
-            
-            <div>
-                <a href="{{ route('groups.statistics', $group->id) }}">統計を見る</a>
-            </div>
-            
-            <div>
-             <a href="{{ route('group.members.index', $group) }}">メンバー一覧を表示</a>
-            </div>
-            
-            <div>
-                <a href="{{ route('groups.edit', $group->id) }}" class="btn btn-primary">グループを編集</a>
-            </div>
-
-            <div>
-                
-            <form action="{{ route('groups.destroy', $group->id) }}" method="post" onsubmit="return confirm('本当にグループを削除しますか？');">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-danger">グループを削除</button>
-            </form> 
-                
-            </div>
-
-
-        @elseif($currentUserRole == 'member')
-
-            <div>
-            <p>あなたはこのグループのメンバーです。</p>
-            </div>
-            
-            <div>
-                <a href="{{ route('groups.statistics', $group->id) }}">統計を見る</a>
-            </div>
-            <div>
-                
-                <a href="{{ route('group.members.index', $group) }}">メンバー一覧を表示</a>
- 
-            </div>
-            <div>
-                <form action="{{ route('groups.leave', $group->id) }}" method="post" onsubmit="return confirm('本当にこのグループを脱退しますか？');">
-                @csrf
-                <button type="submit" class="btn btn-warning">グループを脱退</button>
-            </form>
-            </div>
-
-
-        @else
-        <div>
-            <form action="{{ route('groups.join', $group->id) }}" method="post">
-                @csrf
-                <button type="submit" class="btn btn-success">このグループに加入</button>
-            </form>  
-        @endif
-        
     </div>
 </x-app-layout>
-
