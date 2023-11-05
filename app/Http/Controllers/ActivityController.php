@@ -21,14 +21,35 @@ class ActivityController extends Controller
         return view('activities.time', compact('categories'));
     }
 
-    public function index()
-    {
+ public function index(Request $request)
+{
     $userId = auth()->id();
-    
-    $activities = Activity::where('user_id', $userId)->get();
+    // クエリをビルドする基本的なスタートポイントを設定
+    $query = Activity::where('user_id', $userId);
 
-    return view('activities.index', compact('activities'));
+    // カテゴリで絞り込むためのリクエストがある場合、クエリに追加
+    if ($request->filled('category_id')) {
+        $query->where('category_id', $request->category_id);
     }
+
+    // 並び替えのリクエストがある場合、それをクエリに適用
+    $sortOrder = 'asc';
+    if ($request->filled('sort')) {
+        $sortOrder = $request->sort === 'date_asc' ? 'asc' : 'desc';
+    }
+    $query->orderBy('start_time', $sortOrder);
+
+    // 絞り込まれた並び替えられたクエリ結果を取得
+    $activities = $query->get();
+    
+    // ユーザーに関連するカテゴリを取得
+    $categories = Category::where('user_id', $userId)->get();
+
+    // 結果をビューに渡す
+    return view('activities.index', compact('activities', 'categories'));
+}
+
+    
 public function store(Request $request)
 {
     $activity = new Activity();
