@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Activity;
 use ConsoleTVs\Charts\Classes\Chartjs\Chart;
 use Illuminate\Support\Carbon; 
+use Illuminate\Support\Facades\DB;
 
 
 
@@ -56,24 +57,28 @@ public function store(Request $request)
     $activity->user_id = auth()->id();
     $activity->category_id = $request->input('category_id');
     
+    // 'start_time' を設定
     $startTime = new \DateTime($request->input('start_time'));
     
-    $activity->start_time = $startTime;
-
+    // 'duration' を元に 'end_time' を計算
     $durationInMinutes = $request->input('duration');
-    
     $endTime = clone $startTime;
-    
     $endTime->modify("+$durationInMinutes minutes");
     
+    // モデルの属性を設定
+    $activity->start_time = $startTime;
     $activity->end_time = $endTime;
-    // start_time と studied_at を同じ値に設定
-    $activity->studied_at = $activity->start_time;
+    // ここで 'duration' をモデルにセットする場合
+    
+    $activity->duration = $durationInMinutes;
 
-    // reflect がチェックされているかどうかを確認
+    // その他の属性を設定
+    $activity->studied_at = $startTime; 
     $activity->reflect = $request->has('reflect');
-
+    
+    // モデルを保存
     $activity->save();
+
 
     if ($activity->reflect) {
         // ユーザーが所属しているすべてのグループを取得
@@ -154,40 +159,56 @@ public function destroy($id)
 }
 
 
-
-    
-
 public function indexShow()
 {
+    $userId = auth()->id();  // ログインユーザーのIDを取得
     $today = Carbon::today();  // 今日の日付を取得
-    $activities = Activity::whereDate('studied_at', $today)->get();
+
+  
+    $activities = Activity::where('user_id', $userId)
+                           ->whereDate('studied_at', $today)
+                           ->get();
 
     return view('activities.index_show', compact('activities'));
 }
 
 public function showWeek(Request $request)
 {
-    $endOfWeek = new Carbon();
-    if($request->input('base_date')){
-        $endOfWeek = new Carbon($request->input('base_date'));
-    }
-    $startOfWeek = $endOfWeek->subWeek();
+    $userId = auth()->id(); 
+    $oneWeekAgo = Carbon::now()->subWeek();
 
-    $activities = Activity::where('studied_at', '>=',$startOfWeek)
-    ->where('studied_at', '<=',$endOfWeek)
-    ->orderBy('studied_at', 'asc')->get();
+    $results = DB::table('activities')
+                ->select('user_id', DB::raw('DATE(studied_at) as study_date'), DB::raw('COALESCE(SUM(duration), 0)as total_duration'))
+                ->where('user_id', $userId) // ログインユーザーのデータのみに絞り込む
+                ->whereBetween('studied_at', [$oneWeekAgo, Carbon::now()])
+                ->groupBy('user_id', 'study_date')
+                ->get();
 
-    return view('activities.show_week', compact('activities'));
+    return view('activities.show_week', compact('results'));
 }
 
-public function showMonth()
+
+
+
+
+public function showMonth(Request $request)
 {
-    $endOfMonth = Carbon::today();
-    $startOfMonth = Carbon::today()->subMonth();
-    
-    $activities = Activity::where('studied_at', '>=', now()->subDays(30))->orderBy('studied_at', 'asc')->get();
-    
-    return view('activities.show_month', compact('activities'));
+    $userId = auth()->id(); // ログインしているユーザーのIDを取得
+    $oneMonthAgo = Carbon::now()->subMonth(); // 現在から1か月前の日付を取得
+
+    $results = DB::table('activities')
+                 ->select(
+                     'user_id', 
+                     DB::raw('DATE(studied_at) as study_date'), 
+                     DB::raw('COALESCE(SUM(duration), 0) as total_duration')
+                 )
+                 ->where('user_id', $userId) // ログインユーザーのデータのみに絞り込む
+                 ->whereBetween('studied_at', [$oneMonthAgo, Carbon::now()]) // 過去1か月間のデータを取得
+                 ->groupBy('user_id', 'study_date') // ユーザーIDと勉強日ごとにグループ化
+                 ->orderBy('study_date', 'asc') // 日付で昇順にソート
+                 ->get();
+
+    return view('activities.show_month', compact('results'));
 }
 
 

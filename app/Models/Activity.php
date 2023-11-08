@@ -22,6 +22,7 @@ class Activity extends Model
         'description',
         'studied_at',
         'reflect',
+        'duration',
         
     ];
 

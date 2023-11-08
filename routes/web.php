@@ -81,6 +81,16 @@ Route::get('/groups/{group}/statistics',[GroupController::class,'statistics'])->
 //グループメンバー関連
 Route::get('/groups/{group}/members', [GroupMemberController::class,'index'])->name('group.members.index');
 Route::get('/groups/{group}/members/{user}/activities', [GroupMemberController::class, 'showActivities'])->name('group.members.activities');
+// ユーザーの週間活動を表示するルート
+Route::get('/users/{user}/activities/week', [GroupMemberController::class, 'showUserweekActivities'])
+     ->name('user.activities.week');
+
+// ユーザーの月間活動を表示するルート
+Route::get('/users/{user}/activities/month', [GroupMemberController::class, 'showUserMonthActivities'])
+     ->name('user.activities.month');
+
+Route::get('/groups/{group}/members/{user}/activities/today', [GroupMemberController::class, 'showUserActivitiesForToday'])
+     ->name('group.members.activities.today');
 
 
 

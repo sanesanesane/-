@@ -1,11 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Monthly Study Time Graph') }}
+            {{ $user->name }}の今月の勉強時間グラフ
         </h2>
     </x-slot>
 
-    <!-- グラフ表示領域 -->
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -13,40 +12,39 @@
  
                     <div>
                         <h2>今月の勉強時間グラフ</h2>
-                        <canvas id="monthlyStudyChart" width="500" height="500"></canvas>
+                        <canvas id="monthlyStudyChart"></canvas>
                     </div>
                     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                     <script>
-                        let rawData = @json($results);
-                        let studyDates = [];
-                        let studyTimes = [];
+                        const rawData = @json($results);
+                        const studyDates = [];
+                        const studyTimes = [];
                         const endDate = new Date();
                         const daysInMonth = new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0).getDate();
 
-                        for (let i = daysInMonth - 1; i >= 0; i--) {
-                            let date = new Date();
-                            date.setDate(endDate.getDate() - i);
-                            let formattedDate = date.toISOString().split('T')[0]; // YYYY-MM-DD 形式に変換
-                            studyDates.push(formattedDate);
+                        // 全日にわたってラベルを生成し、勉強時間を0で初期化
+                        for (let day = 1; day <= daysInMonth; day++) {
+                            const date = `${endDate.getFullYear()}-${String(endDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                            studyDates.push(date);
                             studyTimes.push(0); // 初期値として0をセット
                         }
 
                         // rawDataからデータを取得してstudyTimesに反映
-                        rawData.forEach(function(record) {
-                            let index = studyDates.indexOf(record.study_date);
+                        rawData.forEach(record => {
+                            const index = studyDates.indexOf(record.study_date);
                             if (index !== -1) {
                                 studyTimes[index] = record.total_duration;
                             }
                         });
 
-                        var ctx = document.getElementById('monthlyStudyChart').getContext('2d');
-                        var myChart = new Chart(ctx, {
-                            type: 'line', // 折れ線グラフを指定
+                        const ctx = document.getElementById('monthlyStudyChart').getContext('2d');
+                        const myChart = new Chart(ctx, {
+                            type: 'line',
                             data: {
-                                labels: studyDates, // X軸のラベル
+                                labels: studyDates,
                                 datasets: [{
                                     label: '勉強時間 (分)',
-                                    data: studyTimes, // Y軸のデータ
+                                    data: studyTimes,
                                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                                     borderColor: 'rgba(75, 192, 192, 1)',
                                     borderWidth: 1,
@@ -56,7 +54,7 @@
                             options: {
                                 scales: {
                                     y: {
-                                        beginAtZero: true // Y軸の始点を0に設定
+                                        beginAtZero: true
                                     }
                                 }
                             }

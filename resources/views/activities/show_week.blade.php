@@ -6,54 +6,53 @@
     </x-slot>
 
  <!-- グラフ表示領域 -->
-<div>
+     <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    
+    <div>
+        <a href="{{ route('activities.showMonth') }}">
+        一か月
+        </a>
+    </div>
+ 
+ <div>
     <h2>今週の勉強時間グラフ</h2>
     <canvas id="weeklyStudyChart" width="500" height="500"></canvas>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    let raw_data = @json($activities);
-
-    const today = new Date();
-    const oneWeekAgo = new Date(today);
-    oneWeekAgo.setDate(today.getDate() - 7);
-
-    let filteredData = raw_data.filter(activity => {
-        const activityDate = new Date(activity.studied_at);
-        return activityDate >= oneWeekAgo && activityDate <= today;
-    });
-
-    let dailyTotals = {};
-    let dates = [];
-
-    // Initialize dailyTotals for the week
-    for(let i = 6; i >= 0; i--) {
-        const date = new Date(today);
-        date.setDate(today.getDate() - i);
-        const dateString = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-        dailyTotals[dateString] = 0;
-        dates.push(dateString);
+    let rawData = @json($results);
+    let studyDates = [];
+    let studyTimes = [];
+    
+        const endDate = new Date();
+    for (let i = 6; i >= 0; i--) {
+        let date = new Date();
+        date.setDate(endDate.getDate() - i);
+        let formattedDate = date.toISOString().split('T')[0]; // YYYY-MM-DD 形式に変換
+        studyDates.push(formattedDate);
+        studyTimes.push(0); // 初期値として0をセット
     }
 
-    filteredData.forEach(activity => {
-        let minutes = new Date(activity.end_time) - new Date(activity.start_time);
-        minutes = minutes / 1000 / 60;
-        const dateString = activity.studied_at.split(' ')[0];
-        if(dailyTotals[dateString] !== undefined) {
-            dailyTotals[dateString] += minutes;
+    // rawDataからデータを取得してstudyTimesに反映
+    rawData.forEach(function(record) {
+        let index = studyDates.indexOf(record.study_date);
+        if (index !== -1) {
+            studyTimes[index] = record.total_duration;
         }
     });
-
-    const studyTimes = dates.map(date => dailyTotals[date]);
+    
 
     var ctx = document.getElementById('weeklyStudyChart').getContext('2d');
     var myChart = new Chart(ctx, {
-        type: 'line',
+        type: 'line', // 折れ線グラフを指定
         data: {
-            labels: dates,
+            labels: studyDates, // X軸のラベル
             datasets: [{
                 label: '勉強時間 (分)',
-                data: studyTimes,
+                data: studyTimes, // Y軸のデータ
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1,
@@ -63,10 +62,17 @@
         options: {
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true // Y軸の始点を0に設定
                 }
             }
         }
     });
 </script>
+
+</div>
+</div>
+</div>
+</div>
+
+
 </x-app-layout>
