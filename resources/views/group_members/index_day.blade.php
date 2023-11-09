@@ -11,19 +11,30 @@
                 <div class="p-6 text-gray-900">
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<canvas id="studyChart"></canvas>
 <script>
     let rawData = @json($results);
+    
+    let labels = ["今日の勉強時間"];
+    let datasets = [];
     let categories = {};
-    let studyTimes = [];
+    let totalMinutes = 0;
+    
+    const today = new Date();
 
-    // カテゴリごとにデータを集計
-    rawData.forEach(activity => {
-        let category = activity.category.name; // カテゴリ名を取得
-        if (!categories[category]) {
-            categories[category] = 0; // 初期化
+    data.forEach(activity => {
+        // カテゴリ別にデータを集計
+        if(!categories[activity.category.name]) {
+            categories[activity.category.name] = 0;
         }
-        categories[category] += activity.total_duration; // 合計時間を加算
+        let minutes = new Date(activity.end_time) - new Date(activity.start_time);
+        minutes = minutes / 1000 / 60;
+        categories[activity.category.name] += minutes;
+
+        // 総勉強時間の更新
+        totalMinutes += minutes;
     });
+
 
     // データセットを作成
     for (let category in categories) {
@@ -71,3 +82,4 @@
 </div>
 </div>
 </div>
+</x-app-layout>

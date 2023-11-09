@@ -85,7 +85,6 @@ public function store(Request $request)
         $groups = auth()->user()->groups;
 
         foreach ($groups as $group) {
-            $group->total_study_time += $durationInMinutes;
             $group->save();
             
             $group->activities()->attach($activity->id);
