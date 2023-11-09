@@ -89,8 +89,8 @@ Route::get('/users/{user}/activities/week', [GroupMemberController::class, 'show
 Route::get('/users/{user}/activities/month', [GroupMemberController::class, 'showUserMonthActivities'])
      ->name('user.activities.month');
 
-Route::get('/groups/{group}/members/{user}/activities/today', [GroupMemberController::class, 'showUserActivitiesForToday'])
-     ->name('group.members.activities.today');
+Route::get('/users/{user}/activities/today', [GroupMemberController::class, 'showUserActivitiesForToday'])
+      ->name('user.activities.today');
 
 
 

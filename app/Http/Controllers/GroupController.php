@@ -69,7 +69,6 @@ public function store(Request $request)
         $group->activities()->attach($activity->id);  // アクティビティをグループに関連付け
     }
 
-    $group->total_study_time += $totalUserStudyTime;
     $group->save();
     
     return redirect()->route('groups.index')->with('success', 'グループを作成しました。');
@@ -105,7 +104,7 @@ public function searchresults(Request $request)  // ここでRequest $requestを
     $totalUserStudyTime = $reflectActivities->sum('duration');
     
     // 3. その時間をグループの合計勉強時間に加算
-    $group->total_study_time += $totalUserStudyTime;
+    
     $group->save();
 
     // 4. ユーザーのアクティビティをグループに関連付け
@@ -130,7 +129,6 @@ public function leave(Group $group)
         $group->activities()->detach($activity->id);  // アクティビティの関連付けを解除
     }
 
-    $group->total_study_time -= $totalUserStudyTime;
     $group->save();
 
     $group->users()->detach(auth()->id());

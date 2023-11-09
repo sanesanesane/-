@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->timestamps();
+            $table->timestamp('deleted_at')->nullable();
+            $table->foreignId('user_id')->constrained('users');
         });
     }
 

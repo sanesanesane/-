@@ -21,6 +21,10 @@ return new class extends Migration
             $table->datetime('end_time');
             $table->text('description')->nullable();
             $table->timestamps();
+            $table->integer('duration')->nullable(); 
+            $table->datetime('studied_at')->nullable();
+            $table->boolean('reflect')->default(false); 
+            
             
             //外部key
             $table->foreign('user_id')->references('id')->on('users');

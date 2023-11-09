@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('group_id');
             $table->unsignedBigInteger('user_id');
-            $table->string('role');
+            $table->string('role');//
             $table->datetime('joined_at');
             $table->timestamps();
             

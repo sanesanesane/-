@@ -10,27 +10,50 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
 
-
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    let rawData = @json($results); // コントローラーから渡されたデータを受け取る
-    let studyDates = [];
+    let rawData = @json($results);
+    let categories = {};
     let studyTimes = [];
 
-    // データが空でないことを確認
-    if (rawData.length > 0) {
-        // カテゴリ別にデータを集計
-        rawData.forEach(function(record) {
-            studyDates.push(record.study_date);
-            studyTimes.push(record.total_duration);
+    // カテゴリごとにデータを集計
+    rawData.forEach(activity => {
+        let category = activity.category.name; // カテゴリ名を取得
+        if (!categories[category]) {
+            categories[category] = 0; // 初期化
+        }
+        categories[category] += activity.total_duration; // 合計時間を加算
+    });
+
+    // データセットを作成
+    for (let category in categories) {
+        studyTimes.push({
+            label: category,
+            data: [categories[category]], // 各カテゴリの合計時間
+            backgroundColor: getRandomColor() // それぞれ異なる色
         });
-    } else {
-        // データがない場合は、今日の日付を追加し、勉強時間は0とする
-        let todayFormatted = new Date().toISOString().split('T')[0];
-        studyDates.push(todayFormatted);
-        studyTimes.push(0);
     }
+
+    // グラフを描画
+    var ctx = document.getElementById('studyChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['今日の勉強時間'],
+            datasets: studyTimes
+        },
+        options: {
+            scales: {
+                x: {
+                    stacked: true // 縦積みオプション
+                },
+                y: {
+                    stacked: true,
+                    beginAtZero: true // Y軸の始点を0に設定
+                }
+            }
+        }
+    });
 
     // カラーコード生成関数
     function getRandomColor() {
@@ -41,37 +64,8 @@
         }
         return color;
     }
-
-    // データセットを作成
-    let datasets = [{
-        label: '今日の勉強時間',
-        data: studyTimes,
-        backgroundColor: getRandomColor(),
-        borderColor: getRandomColor(),
-        borderWidth: 1
-    }];
-
-    // Chart.jsを使ってグラフを描画
-    var ctx = document.getElementById('studyChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: studyDates,
-            datasets: datasets
-        },
-        options: {
-            scales: {
-                y: {
-                    stacked: true,
-                    beginAtZero: true
-                },
-                x: {
-                    stacked: true
-                }
-            }
-        }
-    });
 </script>
+
 
 </div>
 </div>

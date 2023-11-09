@@ -80,20 +80,17 @@ public function showUserActivitiesForToday(User $user)
 
     // 特定のユーザーと今日の日付に関連するアクティビティを取得
     $results = DB::table('activities')
-                 ->select(
-                     'user_id',
-                     DB::raw('DATE(studied_at) as study_date'),
-                     DB::raw('COALESCE(SUM(duration), 0) as total_duration')
-                 )
+                 ->select('user_id')
                  ->where('user_id', $user->id)
                  ->where('reflect', 1)
                  ->whereDate('studied_at', $today)
-                 ->groupBy('user_id', 'study_date')
+
                  ->get();
 
-    // ビューにデータを渡して表示
+
     return view('group_members.index_day', compact('results', 'user'));
 }
+
 
 
 }
