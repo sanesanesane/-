@@ -73,23 +73,23 @@ public function showUserweekActivities(User $user)
 }
 
 
+
 public function showUserActivitiesForToday(User $user)
 {
-    // 今日の日付を取得
     $today = Carbon::today();
 
-    // 特定のユーザーと今日の日付に関連するアクティビティを取得
     $results = DB::table('activities')
-                 ->select('user_id')
-                 ->where('user_id', $user->id)
+                 ->join('categories', 'activities.category_id', '=', 'categories.id')
+                 ->where('activities.user_id', $user->id)  // 「activities.user_id」と明示
                  ->where('reflect', 1)
                  ->whereDate('studied_at', $today)
-
+                 ->select('activities.*', 'categories.name as category_name')
                  ->get();
-
 
     return view('group_members.index_day', compact('results', 'user'));
 }
+
+
 
 
 

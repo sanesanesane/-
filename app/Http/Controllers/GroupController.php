@@ -270,7 +270,22 @@ protected function calculateMedian($values)
     return ($values[$middle - 1] + $values[$middle]) / 2;
 }
 
+public function showchart_week(Group $group)
+{
+    
 
+
+$activities = Activity::query()
+  ->join('groups', 'groups.id', '=', 'activities.id')
+  ->where('groups.id', 1)
+  ->where('reflect', false)
+  ->whereBetween('studied_at', [Carbon::now()->subWeek(), Carbon::now()])
+  ->get()
+  ->groupBy('studied_at');
+
+ $date = $activities->map(function ($a){return ['data' => $a, 'sum' => $a->pluck('duration')->sum()]; });
+ 
+}
 
     
 }

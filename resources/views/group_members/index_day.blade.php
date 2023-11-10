@@ -18,17 +18,17 @@
     let labels = ["今日の勉強時間"];
     let datasets = [];
     let categories = {};
+    let studyTimes = [];
     let totalMinutes = 0;
     
     const today = new Date();
 
-    data.forEach(activity => {
+    rawData.forEach(activity => {
         // カテゴリ別にデータを集計
         if(!categories[activity.category.name]) {
             categories[activity.category.name] = 0;
         }
-        let minutes = new Date(activity.end_time) - new Date(activity.start_time);
-        minutes = minutes / 1000 / 60;
+         let minutes = activity.duration; 
         categories[activity.category.name] += minutes;
 
         // 総勉強時間の更新
@@ -76,6 +76,11 @@
         return color;
     }
 </script>
+
+
+
+
+
 
 
 </div>
