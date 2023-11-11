@@ -3,11 +3,13 @@ URL::forceScheme('https');
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupMemberController;
+
 
 
 /*
@@ -76,7 +78,9 @@ Route::delete('/groups/{group}/leave', [GroupController::class, 'leave'])->name(
 Route::delete('/groups/{group}', [GroupController::class, 'destroy'])->name('groups.destroy');
 Route::get('/groups/{group}/edit', [GroupController::class, 'edit'])->name('groups.edit');
 Route::put('/groups/{group}/update', [GroupController::class, 'update'])->name('groups.update');
-Route::get('/groups/{group}/statistics',[GroupController::class,'statistics'])->name('groups.statistics');
+Route::get('/groups/{group}/statistics',[GroupController::class,'showchart_week'])->name('groups.statistics');
+
+
 
 //グループメンバー関連
 Route::get('/groups/{group}/members', [GroupMemberController::class,'index'])->name('group.members.index');
@@ -91,6 +95,7 @@ Route::get('/users/{user}/activities/month', [GroupMemberController::class, 'sho
 
 Route::get('/users/{user}/activities/today', [GroupMemberController::class, 'showUserActivitiesForToday'])
       ->name('user.activities.today');
+
 
 
 

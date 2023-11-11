@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Group;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\Activity;
 
 
 class GroupController extends Controller
@@ -211,81 +211,47 @@ public function show(Group $group)
 
     return view('groups.show', compact('group', 'currentUserRole'));
 }
-
-public function statistics($groupId)
-{
-    $group = Group::findOrFail($groupId);
-
-    // 仮定：GroupモデルとActivityモデルはリレーションが組まれているとします。
-    $activitiesToday = $group->activities()->whereDate('studied_at', now())->get();
-    $activitiesWeek = $group->activities()->whereBetween('studied_at', [now()->startOfWeek(), now()->endOfWeek()])->get();
-    $activitiesMonth = $group->activities()->whereBetween('studied_at', [now()->startOfMonth(), now()->endOfMonth()])->get();
-
-    // 今日、今週、今月の統計を計算
-    $statsToday = $this->calculateStats($activitiesToday);
-    $statsWeek = $this->calculateStats($activitiesWeek);
-    $statsMonth = $this->calculateStats($activitiesMonth);
-
-    // 今日、今週、今月の統計を$stats配列にまとめる
-    $stats = [
-        'today' => $statsToday,
-        'week' => $statsWeek,
-        'month' => $statsMonth
-    ];
-
-    return view('groups.statistics', compact('group', 'stats'));
-}
-
-
-protected function calculateStats($activities)
-{
-    $totalTime = $activities->sum('duration');
-    $averageTime = $activities->avg('duration');
-    $medianTime = $this->calculateMedian($activities->pluck('duration')->toArray());
-
-    $mostStudiousUser = $activities->groupBy('user_id')->sortByDesc(fn($activity) => $activity->sum('duration'))->first()->first()->user->name;
-
-    return [
-        'total' => $totalTime,
-        'average' => $averageTime,
-        'median' => $medianTime,
-        'most_studious' => $mostStudiousUser,
-    ];
-}
-
-protected function calculateMedian($values)
-{
-    if (empty($values)) {
-        return 0; // または null や適切なデフォルト値
-    }
-
-    sort($values);
-    $count = count($values);
-    $middle = floor($count / 2);
-
-    if ($count % 2) {
-        return $values[$middle];
-    }
-
-    return ($values[$middle - 1] + $values[$middle]) / 2;
-}
-
 public function showchart_week(Group $group)
 {
-    
+    // 過去1週間のデータを取得
+    $activities = Activity::whereHas('groups', function ($query) use ($group) { // 'groupActivities' から 'groups' に変更
+        $query->where('group_id', $group->id);
+    })
+    ->where('reflect', true) // ここをビジネスロジックに合わせて調整
+    ->whereBetween('studied_at', [Carbon::now()->subWeek(), Carbon::now()])
+    ->get();
 
+    // 日付ごとに集計
+    $groupedActivities = $activities->groupBy(function ($activity) {
+        return $activity->studied_at->format('Y-m-d');
+    });
 
-$activities = Activity::query()
-  ->join('groups', 'groups.id', '=', 'activities.id')
-  ->where('groups.id', 1)
-  ->where('reflect', false)
-  ->whereBetween('studied_at', [Carbon::now()->subWeek(), Carbon::now()])
-  ->get()
-  ->groupBy('studied_at');
+    // 日付と勉強時間の合計を計算
+    $studyData = $groupedActivities->mapWithKeys(function ($activities, $date) {
+        $totalDuration = $activities->sum('duration');
+        return [
+            $date => [
+                'sum' => $totalDuration,
+                'average' => $totalDuration / max($activities->count(), 1)
+            ]
+        ];
+    });
 
- $date = $activities->map(function ($a){return ['data' => $a, 'sum' => $a->pluck('duration')->sum()]; });
- 
+    // グラフに必要なデータ形式に変換
+    $labels = $studyData->keys();
+    $sumValues = $studyData->pluck('sum');
+    $averageValues = $studyData->pluck('average');
+
+    // ビューにデータを渡す
+    return view('groups.statistics', [
+        'studyData' => $studyData,
+        'labels' => $labels,
+        'sumValues' => $sumValues,
+        'averageValues' => $averageValues
+    ]);
 }
 
-    
+
+
+
 }

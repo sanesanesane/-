@@ -23,17 +23,18 @@
     
     const today = new Date();
 
-    rawData.forEach(activity => {
-        // カテゴリ別にデータを集計
-        if(!categories[activity.category.name]) {
-            categories[activity.category.name] = 0;
-        }
-         let minutes = activity.duration; 
-        categories[activity.category.name] += minutes;
 
-        // 総勉強時間の更新
-        totalMinutes += minutes;
-    });
+rawData.forEach(activity => {
+    // カテゴリ別にデータを集計
+    if(!categories[activity.category_name]) { // category_nameに修正
+        categories[activity.category_name] = 0;
+    }
+    let minutes = activity.duration;
+    categories[activity.category_name] += minutes; // category_nameに修正
+
+    // 総勉強時間の更新
+    totalMinutes += minutes;
+});
 
 
     // データセットを作成
