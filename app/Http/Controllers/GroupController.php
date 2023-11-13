@@ -226,6 +226,7 @@ public function showchart_week(Group $group)
         return $activity->studied_at->format('Y-m-d');
     });
 
+
     // 日付と勉強時間の合計を計算
     $studyData = $groupedActivities->mapWithKeys(function ($activities, $date) {
         $totalDuration = $activities->sum('duration');
@@ -241,14 +242,15 @@ public function showchart_week(Group $group)
     $labels = $studyData->keys();
     $sumValues = $studyData->pluck('sum');
     $averageValues = $studyData->pluck('average');
+// ビューにデータを渡す
+return view('groups.statistics', [
+    'group' => $group, 
+    'studyData' => $studyData,
+    'labels' => $labels,
+    'sumValues' => $sumValues,
+    'averageValues' => $averageValues
+]);
 
-    // ビューにデータを渡す
-    return view('groups.statistics', [
-        'studyData' => $studyData,
-        'labels' => $labels,
-        'sumValues' => $sumValues,
-        'averageValues' => $averageValues
-    ]);
 }
 
 

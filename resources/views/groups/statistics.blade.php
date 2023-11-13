@@ -1,6 +1,10 @@
 
 <x-app-layout>
-
+ <!-- グラフ表示領域 -->
+     <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
 
     <div>
         <h2>{{ $group->name }}の今週の勉強時間グラフ</h2>
@@ -34,12 +38,16 @@
                 scales: {
                     y: {
                         beginAtZero: true
-                    }
+                        suggestedMax: true //改善点
+                     }   
                 },
                 responsive: true,
                 maintainAspectRatio: false
             }
         });
     </script>
-    
+    </div>
+    </div>
+    </div>
+    </div>
 </x-app-layout>
