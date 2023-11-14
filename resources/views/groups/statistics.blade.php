@@ -8,14 +8,15 @@
 
     <div>
         <h2>{{ $group->name }}の今週の勉強時間グラフ</h2>
-        <canvas id="weeklyStudyChart"></canvas>
+    </div>
+    <div height ="600">
+        <canvas id="weeklyStudyChart" width ="800" height ="600"></canvas>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // PHPの配列をJavaScriptのオブジェクトに変換
         const studyData = @json($studyData);
-
         // 日付と勉強時間の配列を作成
         const studyDates = Object.keys(studyData);
         const studyTimes = Object.values(studyData);
@@ -37,8 +38,8 @@
             options: {
                 scales: {
                     y: {
-                        beginAtZero: true
-                        suggestedMax: true //改善点
+                        beginAtZero: true,
+                        suggestedMax: true,//改善点
                      }   
                 },
                 responsive: true,
@@ -51,3 +52,4 @@
     </div>
     </div>
 </x-app-layout>
+

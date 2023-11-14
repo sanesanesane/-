@@ -213,7 +213,7 @@ public function show(Group $group)
 }
 public function showchart_week(Group $group)
 {
-    // 過去1週間のデータを取得
+  
     $activities = Activity::whereHas('groups', function ($query) use ($group) { // 'groupActivities' から 'groups' に変更
         $query->where('group_id', $group->id);
     })
@@ -237,6 +237,10 @@ public function showchart_week(Group $group)
             ]
         ];
     });
+
+dd($studyData->toArray());
+
+
 
     // グラフに必要なデータ形式に変換
     $labels = $studyData->keys();
