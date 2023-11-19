@@ -79,6 +79,7 @@ Route::delete('/groups/{group}', [GroupController::class, 'destroy'])->name('gro
 Route::get('/groups/{group}/edit', [GroupController::class, 'edit'])->name('groups.edit');
 Route::put('/groups/{group}/update', [GroupController::class, 'update'])->name('groups.update');
 Route::get('/groups/{group}/statistics',[GroupController::class,'showchart_week'])->name('groups.statistics');
+Route::get('/groups/{group}/statistics/month',[GroupController::class,'showchart_month'])->name('groups.month');
 
 
 

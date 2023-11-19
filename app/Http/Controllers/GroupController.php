@@ -211,24 +211,34 @@ public function show(Group $group)
 
     return view('groups.show', compact('group', 'currentUserRole'));
 }
+
 public function showchart_week(Group $group)
 {
-  
-    $activities = Activity::whereHas('groups', function ($query) use ($group) { // 'groupActivities' から 'groups' に変更
+    // 過去1週間のアクティビティを取得
+    $activities = Activity::whereHas('groups', function ($query) use ($group) {
         $query->where('group_id', $group->id);
     })
-    ->where('reflect', true) // ここをビジネスロジックに合わせて調整
+    ->where('reflect', true)
     ->whereBetween('studied_at', [Carbon::now()->subWeek(), Carbon::now()])
     ->get();
 
-    // 日付ごとに集計
+    // 日付ごとにアクティビティを集計
     $groupedActivities = $activities->groupBy(function ($activity) {
         return $activity->studied_at->format('Y-m-d');
     });
 
+    // 過去7日間の全日付を生成
+    $dates = collect(new \DatePeriod(
+        Carbon::now()->subDays(6)->startOfDay(),
+        new \DateInterval('P1D'),
+        Carbon::now()->endOfDay()
+    ))->mapWithKeys(function ($date) {
+        return [$date->format('Y-m-d') => ['sum' => 0, 'average' => 0]];
+    });
 
-    // 日付と勉強時間の合計を計算
-    $studyData = $groupedActivities->mapWithKeys(function ($activities, $date) {
+
+    // 日付ごとのデータを統合し、データがない日付には0を設定
+    $studyData = $dates->merge($groupedActivities->mapWithKeys(function ($activities, $date) {
         $totalDuration = $activities->sum('duration');
         return [
             $date => [
@@ -236,26 +246,67 @@ public function showchart_week(Group $group)
                 'average' => $totalDuration / max($activities->count(), 1)
             ]
         ];
+    }));
+
+    // ビューにデータを渡す
+    return view('groups.statistics', [
+        'group' => $group,
+        'studyData' => $studyData,
+        'labels' => $studyData->keys(),
+        'sumValues' => $studyData->pluck('sum'),
+        'averageValues' => $studyData->pluck('average')
+    ]);
+}
+
+public function showchart_month(Group $group)
+{
+    // 過去1ヶ月間のアクティビティを取得
+    $activities = Activity::whereHas('groups', function ($query) use ($group) {
+        $query->where('group_id', $group->id);
+    })
+    ->where('reflect', true)
+    ->whereBetween('studied_at', [Carbon::now()->subMonth(), Carbon::now()])
+    ->get();
+
+    // 日付ごとにアクティビティを集計
+    $groupedActivities = $activities->groupBy(function ($activity) {
+        return $activity->studied_at->format('Y-m-d');
     });
 
-dd($studyData->toArray());
+    // 過去30日間の全日付を生成
+    $dates = collect(new \DatePeriod(
+        Carbon::now()->subDays(29)->startOfDay(),
+        new \DateInterval('P1D'),
+        Carbon::now()->endOfDay()
+    ))->mapWithKeys(function ($date) {
+        return [$date->format('Y-m-d') => ['sum' => 0, 'average' => 0]];
+    });
+
+    // 日付ごとのデータを統合し、データがない日付には0を設定
+    $studyData = $dates->merge($groupedActivities->mapWithKeys(function ($activities, $date) {
+        $totalDuration = $activities->sum('duration');
+        return [
+            $date => [
+                'sum' => $totalDuration,
+                'average' => $totalDuration / max($activities->count(), 1)
+            ]
+        ];
+    }));
+    
+    //ビュー渡す。
+    
+    return view('groups.statistics_month', [ 
+        'group' => $group,
+        'studyData' => $studyData,
+        'labels' => $studyData->keys(),
+        'sumValues' => $studyData->pluck('sum'),
+        'averageValues' => $studyData->pluck('average')
+    ]);
 
 
-
-    // グラフに必要なデータ形式に変換
-    $labels = $studyData->keys();
-    $sumValues = $studyData->pluck('sum');
-    $averageValues = $studyData->pluck('average');
-// ビューにデータを渡す
-return view('groups.statistics', [
-    'group' => $group, 
-    'studyData' => $studyData,
-    'labels' => $labels,
-    'sumValues' => $sumValues,
-    'averageValues' => $averageValues
-]);
 
 }
+
 
 
 
