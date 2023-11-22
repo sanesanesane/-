@@ -7,22 +7,27 @@ use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
 {
-    public function create()
+    public function create() //カテゴリ作成ビュー
     {
         $categories = Category::all();  // カテゴリの一覧を取得
-        return view('categories.create', compact('categories')); // カテゴリ作成のビューファイルへのパスと一緒に$categoriesを渡す
+        return view('categories.create', compact('categories')); //カテゴリの情報を渡す
     }
     
-
-    public function store(Request $request)
+    public function store(Request $request) //カテゴリ保存
     {
         
     $request->validate([
-    'name' => ['required', 'string', 'max:255', Rule::unique('categories')->whereNull('deleted_at')],
+    //カテゴリ保存ルール
+    'name' => ['required', 'string', 'max:255', //カテゴリ保存バリデーション
+    Rule::unique('categories')->where(function ($query) {
+            return $query->where('user_id', auth()->id())->whereNull('deleted_at');
+        }),
 ], 
 [
     'name.required' => 'カテゴリ名は必須です。',
     'name.unique' => 'このカテゴリ名はすでに存在します。',
+]
+
 ]);
 
         $category = new Category;
@@ -32,7 +37,6 @@ class CategoryController extends Controller
 
         return redirect()->route('categories.index')->with('success', '登録完了しました！');
     }
-
 
     public function index()
 {
