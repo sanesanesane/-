@@ -19,28 +19,31 @@
                     
                     </div>
                     
-                    @if(session('success'))
+                    @if(session('success')) <!--コントローラーのサクセスがあるのか確認-->
                         <div class="alert alert-success">
-                            {{ session('success') }}
+                            {{ session('success') }} <!--コントローラーのサクセスを返します。-->
                         </div>
                     @endif
 
 
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead>
+                    <table class="min-w-full divide-y divide-gray-200"> <!--テーブル-->
+                        <thead><!--テーブルの目次-->
                             <tr>
                                 <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">カテゴリ名</th>
+                                <th class="px-6 py-3 bg-gray-50 text-right text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">編集</th>
                             </tr>
                         </thead>
+                        
                         <tbody>
-                            @foreach($categories as $category)
+                            @foreach($categories as $category) <!--繰り返し処理-->
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-gray-900">
+                                    <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-gray-900"><!--テーブルの内容1-->
                                         {{ $category->name }}
                                     </td>
+
                                     <td class="px-6 py-4 whitespace-no-wrap text-right text-sm leading-5 font-medium">
                                         
-<a href="{{ route('categories.edit', $category->id) }}">
+<a href="{{ route('categories.edit', $category->id) }}"> <!--カテゴリのIDを確認しそのIDの編集画面に飛ぶ-->
 <x-edit-button>
     編集
 </x-edit-button>
@@ -50,6 +53,11 @@
                             @endforeach
                         </tbody>
                     </table>
+<!-- ページネーションリンク -->
+<div>
+    {{ $categories->links() }}
+</div>
+
 
                 </div>
             </div>

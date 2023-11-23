@@ -13,7 +13,8 @@ return [
     |
     */
 
-    'previous' => '&laquo; Previous',
-    'next' => 'Next &raquo;',
+'previous' => '&laquo; 前',
+'next' => '次 &raquo;',
+'showing' => ':total件中 :firstから:last件を表示',
 
 ];
