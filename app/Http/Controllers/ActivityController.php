@@ -18,33 +18,41 @@ class ActivityController extends Controller
         
     $userId = auth()->id();
     
-    $categories = Category::where('user_id', $userId)->get();
-        return view('activities.time', compact('categories'));
+    $categories = Category::where('user_id', $userId)->get(); //ユーザーのカテゴリ情報を取得。
+    
+        return view('activities.time', compact('categories'));//カテゴリの情報も返す。
     }
 
  public function index(Request $request)
 {
     $userId = auth()->id();
-    // クエリをビルドする基本的なスタートポイントを設定
-    $query = Activity::where('user_id', $userId);
+    $query = Activity::where('user_id', $userId); //クエリからログインユーザーのみの情報だけを定義。
+    
+     $categories = Category::where('user_id', $userId)->get(); //カテゴリ情報を取得。
 
-    // カテゴリで絞り込むためのリクエストがある場合、クエリに追加
-    if ($request->filled('category_id')) {
-        $query->where('category_id', $request->category_id);
+    // カテゴリががあるときの絞り方。
+    if ($request->filled('category_id')) //カテゴリが選択されていた場合場合
+    {
+        $query->where('category_id', $request->category_id); //クエリからカテゴリ情報のみを取得。
     }
-
-    // 並び替えのリクエストがある場合、それをクエリに適用
-    $sortOrder = 'asc';
-    if ($request->filled('sort')) {
-        $sortOrder = $request->sort === 'date_asc' ? 'asc' : 'desc';
-    }
-    $query->orderBy('start_time', $sortOrder);
-
+    
     // 絞り込まれた並び替えられたクエリ結果を取得
     $activities = $query->get();
+   // クエリの結果を取得し、ページネーションを適用
+$activities = $query->paginate(10);
+
+
+    // 並び替えのリクエストがある場合.
     
-    // ユーザーに関連するカテゴリを取得
-    $categories = Category::where('user_id', $userId)->get();
+    
+    $sortOrder = 'asc';//元の並び順
+    
+    if ($request->filled('sort')) //並び替えの選択をしているかどうか確認
+    {
+        $sortOrder = $request->sort === 'date_asc' ? 'asc' : 'desc'; // date_ascが真なら昇順。偽なら降順で並べる。
+    }
+    $query->orderBy('start_time', $sortOrder); //スタートタイムを参考に整列。
+
 
     // 結果をビューに渡す
     return view('activities.index', compact('activities', 'categories'));
@@ -53,59 +61,59 @@ class ActivityController extends Controller
     
 public function store(Request $request)
 {
-    $activity = new Activity();
-    $activity->user_id = auth()->id();
-    $activity->category_id = $request->input('category_id');
+    $activity = new Activity(); //新しいアクティビティリクエストを受け取る。
     
-    // 'start_time' を設定
-    $startTime = new \DateTime($request->input('start_time'));
+    $activity->user_id = auth()->id(); //ログイン中のユーザーを指定、作成します。
     
-    // 'duration' を元に 'end_time' を計算
-    $durationInMinutes = $request->input('duration');
-    $endTime = clone $startTime;
-    $endTime->modify("+$durationInMinutes minutes");
+    $activity->category_id = $request->input('category_id'); //アクテビティのカテゴリはリクエストで選択したカテゴリした。
     
-    // モデルの属性を設定
-    $activity->start_time = $startTime;
-    $activity->end_time = $endTime;
-    // ここで 'duration' をモデルにセットする場合
+    $startTime = new \DateTime($request->input('start_time')); //リクエストデータをdatetimeに新しいスタートタイムを設定。
     
-    $activity->duration = $durationInMinutes;
-
-    // その他の属性を設定
-    $activity->studied_at = $startTime; 
-    $activity->reflect = $request->has('reflect');
+   
+    $durationInMinutes = $request->input('duration'); //入力された分数を定義
     
-    // モデルを保存
+    $endTime = clone $startTime; //コピーを作成
+    $endTime->modify("+$durationInMinutes minutes"); //作成したコピーにdurationを入力しendtime作成。
+    
+    $activity->start_time = $startTime; //スタートタイム設定
+    $activity->end_time = $endTime; //エンドタイム設定
+    $activity->duration = $durationInMinutes; //duration設定
+    $activity->studied_at = $startTime; //勉強日付設定
+    
+    $activity->reflect = $request->has('reflect');//リクエスト内にリフレクト情報があるかないか確認。
+    
     $activity->save();
 
 
-    if ($activity->reflect) {
-        // ユーザーが所属しているすべてのグループを取得
-        $groups = auth()->user()->groups;
+    if ($activity->reflect) //リフレクトカラムが真の時
+    {
+        $groups = auth()->user()->groups; //ユーザーとグループの情報を取得
 
-        foreach ($groups as $group) {
-            $group->save();
+        foreach ($groups as $group) //所属グループをループさせる
+    {
             
-            $group->activities()->attach($activity->id);
+            $group->activities()->attach($activity->id); //アクテビティをグループに関連付け
+            
+            $group->save(); //保存
     }
         }
     
-    return redirect()->route('activities.index')->with('success', 'Activity recorded successfully!');
+    return redirect()->route('activities.index')->with('success', '登録完了しました！');
 }
 
 
     
     
-public function show($id)
+public function show($id) //idを指定
 {
-    $activity = Activity::find($id);
+    $activity = Activity::find($id); //指定されたidを表示
     return view('activities.show', compact('activity'));
 }
-public function edit($id)
+
+public function edit($id) 
 {
-    $activity = Activity::findOrFail($id);
-    $categories = Category::all(); // カテゴリを編集フォームに渡す場合
+    $activity = Activity::find($id);
+    $categories = Category::all(); 
     return view('activities.edit', compact('activity', 'categories'));
 }
 

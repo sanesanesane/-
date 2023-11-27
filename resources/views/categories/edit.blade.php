@@ -28,7 +28,7 @@
 
                     <div class="mb-4">
                         <label for="name" class="block text-gray-700 text-sm font-bold mb-4">名前変更</label>
-                        <input class="shadow appearance-none border rounded w-1/5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" name="name" value="{{ $category->name }}" required>
+                        <input class="appearance-none block w-1/2 bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="name" name="name" value="{{ $category->name }}" required>
                         <!--id と　name　を指定。　valueは元々のデータを反映-->
                         
                     </div>

@@ -11,11 +11,13 @@
                 <div class="p-6 text-gray-900">
 
                     <!-- グラフ切り替えボタン -->
-                    <div class="mb-4 flex justify-between items-center">
+                    <div class="mb-4">
                         <a href="{{ route('activities.showWeek') }}" class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring focus:ring-blue-200 disabled:opacity-25 transition">
                             週
                         </a>
-                        <!-- 他の期間ボタンも同様に追加 -->
+                        <a href="{{ route('activities.showMonth') }}" class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring focus:ring-blue-200 disabled:opacity-25 transition">
+        一か月
+        </a>
                     </div>
 
                     <!-- 一覧テーブル -->

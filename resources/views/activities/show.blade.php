@@ -14,9 +14,11 @@
     <div class="container mt-5">
         <div class="mb-4">
             <strong>カテゴリ:</strong> {{ $activity->category ? $activity->category->name : 'カテゴリなし' }}
+            <!--形式は 条件 ? 真の場合の値 : 偽の場合の値 です-->
         </div>
         <div class="mb-4">
             <strong>日付:</strong> {{ $activity->start_time->format('Y-m-d') }}
+            <!--ー年ー月ー日で表示-->
         </div>
         <div class="mb-4">
             <strong>時間:</strong> {{ $activity->duration }}分
@@ -24,7 +26,8 @@
         <div class="mb-6">
             <strong>内容:</strong> {{ $activity->description ?? '未記入' }}
         </div>
-        @if(auth()->id() === $activity->user_id)
+        @if(auth()->id() === $activity->user_id) 
+    <!--ログイン中のユーザーと登録ユーザーが同じの場合-->
 <div class="flex space-x-10">
 
 <div>

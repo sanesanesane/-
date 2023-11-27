@@ -23,13 +23,15 @@
                             @csrf  <!-- 防御-->
 
                             
-                            <div class="form-group">  <!-- 入力をグループ化-->
+                            <div class="form-group mb-5 ">  <!-- 入力をグループ化-->
                                 
                             <label class="block text-gray-350 text-sm font-bold mb-5" for="name">カテゴリ名</label>  <!-- 入力フォームにタイトル-->
-                            <input class="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-350 leading-tight focus:outline-none focus:shadow-outline mb-5" id="name" name="name" placeholder="カテゴリ名" required>
+                            <input class="appearance-none block w-1/2 bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="name" name="name" placeholder="カテゴリ名" required>
                                <!-- 入力フォーム--> 
                                
                             </div>
+
+
 <div class="text-left">   <!--左から書くよ-->
     <x-danger-button>  <!--ボタンのコンポーネント-->
         追加
