@@ -65,13 +65,11 @@ public function store(Request $request)
     
     $activity->user_id = auth()->id(); //ログイン中のユーザーを指定、作成します。
     
-    $activity->category_id = $request->input('category_id'); //アクテビティのカテゴリはリクエストで選択したカテゴリした。
-    
+    $activity->category_id = $request->input('category_id'); //アクテビティのカテゴリはリクエストで選択したカテゴリ。
     $startTime = new \DateTime($request->input('start_time')); //リクエストデータをdatetimeに新しいスタートタイムを設定。
     
    
     $durationInMinutes = $request->input('duration'); //入力された分数を定義
-    
     $endTime = clone $startTime; //コピーを作成
     $endTime->modify("+$durationInMinutes minutes"); //作成したコピーにdurationを入力しendtime作成。
     
@@ -79,9 +77,7 @@ public function store(Request $request)
     $activity->end_time = $endTime; //エンドタイム設定
     $activity->duration = $durationInMinutes; //duration設定
     $activity->studied_at = $startTime; //勉強日付設定
-    
     $activity->reflect = $request->has('reflect');//リクエスト内にリフレクト情報があるかないか確認。
-    
     $activity->save();
 
 
@@ -112,8 +108,8 @@ public function show($id) //idを指定
 
 public function edit($id) 
 {
-    $activity = Activity::find($id);
-    $categories = Category::all(); 
+    $activity = Activity::find($id);//特定にアクティビティを検索
+    $categories = Category::all(); //カテゴリの情報を取得
     return view('activities.edit', compact('activity', 'categories'));
 }
 
@@ -122,20 +118,17 @@ public function update(Request $request, $id)
     $activity = Activity::findOrFail($id); // 最初に$activityを取得
     $oldDuration = $activity->duration;    // その後に$oldDurationを取得
 
-    $activity->update($request->all());
+    $activity->update($request->all());   //リクエストされたデータをすべてアップデート
     
     // reflect属性の更新
-    $activity->reflect = $request->has('reflect');
+    $activity->reflect = $request->has('reflect'); //リフレクト情報の更新
     $activity->save();
     
     // 反映設定がオンの場合のみグループに反映
     if ($activity->reflect) {
-        $durationDifference = $activity->duration - $oldDuration; // 差分を計算
-
         $groups = auth()->user()->groups;
         
         foreach ($groups as $group) {
-            $group->total_study_time += $durationDifference;
             $group->save();
             
             $group->activities()->attach($activity->id);
@@ -143,7 +136,7 @@ public function update(Request $request, $id)
         }
     }
     
-    return redirect()->route('activities.index')->with('success', 'Activity updated successfully!');
+    return redirect()->route('activities.index')->with('success', '更新完了しました！');
 }
 
 
