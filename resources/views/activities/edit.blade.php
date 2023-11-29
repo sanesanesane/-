@@ -44,7 +44,7 @@
                                     時間 (分)
                                 </label>    
                                     <input type="number" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
-                                    id="duration" name="duration" value="{{ $activity->end_time->diffInMinutes($activity->start_time) }}">
+                                    id="duration" name="duration" value= "{{ $activity->duration }}">
                                     <!---->
                                 </div>
                                 </div>
@@ -75,6 +75,7 @@
                                     
                                     <input type="checkbox" class="mr-2" id="reflect" name="reflect" 
                                     value="1" {{ $activity->reflect ? 'checked' : '' }}>
+                                    
                                     <label for="reflect" class="block uppercase tracking-wide text-gray-700 text-xs font-bold">
                                         グループに反映する</label>
                                 </div>

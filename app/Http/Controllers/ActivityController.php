@@ -113,12 +113,15 @@ public function edit($id)
     return view('activities.edit', compact('activity', 'categories'));
 }
 
+
 public function update(Request $request, $id)
 {
     $activity = Activity::findOrFail($id); // 最初に$activityを取得
     $oldDuration = $activity->duration;    // その後に$oldDurationを取得
 
     $activity->update($request->all());   //リクエストされたデータをすべてアップデート
+    $activity->duration = $request->input('duration');
+    $activity->update();
     
     // reflect属性の更新
     $activity->reflect = $request->has('reflect'); //リフレクト情報の更新
@@ -129,10 +132,10 @@ public function update(Request $request, $id)
         $groups = auth()->user()->groups;
         
         foreach ($groups as $group) {
-            $group->save();
             
             $group->activities()->attach($activity->id);
             $group->refresh();
+            $group->save();
         }
     }
     
@@ -145,11 +148,11 @@ public function destroy($id)
     $activity = Activity::findOrFail($id);
     if ($activity->reflect) {
         $groups = auth()->user()->groups;
-        foreach ($groups as $group) {
-            $group->total_study_time -= $activity->duration; // durationを引く
-            $group->save();
+        foreach ($groups as $group) 
+        {
             
             $group->activities()->detach($activity->id);
+            $group->save();
             $group->refresh();
         }
     }
@@ -163,25 +166,31 @@ public function indexShow()
 {
     $userId = auth()->id();  // ログインユーザーのIDを取得
     $today = Carbon::today();  // 今日の日付を取得
-
   
     $activities = Activity::where('user_id', $userId)
                            ->whereDate('studied_at', $today)
                            ->get();
-
+                           
     return view('activities.index_show', compact('activities'));
 }
+
 
 public function showWeek(Request $request)
 {
     $userId = auth()->id(); 
+    
     $oneWeekAgo = Carbon::now()->subWeek();
+    //本日から一週間前の日付を取得
 
-    $results = DB::table('activities')
-                ->select('user_id', DB::raw('DATE(studied_at) as study_date'), DB::raw('COALESCE(SUM(duration), 0)as total_duration'))
+    $results = DB::table('activities')//テーブルの情報から取得
+                ->select('user_id', DB::raw('DATE(studied_at) as study_date'), 
+                //ユーザーと日付を取得
+                DB::raw('COALESCE(SUM(duration), 0)as total_duration'))
+                //NULLの時は0を返す。
                 ->where('user_id', $userId) // ログインユーザーのデータのみに絞り込む
                 ->whereBetween('studied_at', [$oneWeekAgo, Carbon::now()])
                 ->groupBy('user_id', 'study_date')
+                //ユーザーと日付をグループ化
                 ->get();
 
     return view('activities.show_week', compact('results'));
