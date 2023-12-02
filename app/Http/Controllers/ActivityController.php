@@ -58,25 +58,19 @@ $activities = $query->paginate(10);
     return view('activities.index', compact('activities', 'categories'));
 }
 
-    
+
 public function store(Request $request)
 {
     $activity = new Activity(); //新しいアクティビティリクエストを受け取る。
-    
+
     $activity->user_id = auth()->id(); //ログイン中のユーザーを指定、作成します。
-    
+
     $activity->category_id = $request->input('category_id'); //アクテビティのカテゴリはリクエストで選択したカテゴリ。
     $startTime = new \DateTime($request->input('start_time')); //リクエストデータをdatetimeに新しいスタートタイムを設定。
-    
-   
     $durationInMinutes = $request->input('duration'); //入力された分数を定義
-    $endTime = clone $startTime; //コピーを作成
-    $endTime->modify("+$durationInMinutes minutes"); //作成したコピーにdurationを入力しendtime作成。
-    
+
     $activity->start_time = $startTime; //スタートタイム設定
-    $activity->end_time = $endTime; //エンドタイム設定
     $activity->duration = $durationInMinutes; //duration設定
-    $activity->studied_at = $startTime; //勉強日付設定
     $activity->reflect = $request->has('reflect');//リクエスト内にリフレクト情報があるかないか確認。
     $activity->save();
 
@@ -87,16 +81,15 @@ public function store(Request $request)
 
         foreach ($groups as $group) //所属グループをループさせる
     {
-            
+
             $group->activities()->attach($activity->id); //アクテビティをグループに関連付け
-            
+
             $group->save(); //保存
     }
         }
-    
+
     return redirect()->route('activities.index')->with('success', '登録完了しました！');
 }
-
 
     
     
@@ -158,7 +151,7 @@ public function destroy($id)
     }
 
     $activity->delete();
-    return redirect()->route('activities.index')->with('success', 'Activity deleted successfully!');
+    return redirect()->route('activities.index')->with('success', '削除完了しました');
 }
 
 
@@ -168,7 +161,7 @@ public function indexShow()
     $today = Carbon::today();  // 今日の日付を取得
   
     $activities = Activity::where('user_id', $userId)
-                           ->whereDate('studied_at', $today)
+                           ->whereDate('start_time', $today)
                            ->get();
                            
     return view('activities.index_show', compact('activities'));
@@ -183,12 +176,12 @@ public function showWeek(Request $request)
     //本日から一週間前の日付を取得
 
     $results = DB::table('activities')//テーブルの情報から取得
-                ->select('user_id', DB::raw('DATE(studied_at) as study_date'), 
+                ->select('user_id', DB::raw('DATE(start_time) as study_date'), 
                 //ユーザーと日付を取得
                 DB::raw('COALESCE(SUM(duration), 0)as total_duration'))
                 //NULLの時は0を返す。
                 ->where('user_id', $userId) // ログインユーザーのデータのみに絞り込む
-                ->whereBetween('studied_at', [$oneWeekAgo, Carbon::now()])
+                ->whereBetween('start_time', [$oneWeekAgo, Carbon::now()])
                 ->groupBy('user_id', 'study_date')
                 //ユーザーと日付をグループ化
                 ->get();
@@ -208,11 +201,11 @@ public function showMonth(Request $request)
     $results = DB::table('activities')
                  ->select(
                      'user_id', 
-                     DB::raw('DATE(studied_at) as study_date'), 
+                     DB::raw('DATE(start_time) as study_date'), 
                      DB::raw('COALESCE(SUM(duration), 0) as total_duration')
                  )
                  ->where('user_id', $userId) // ログインユーザーのデータのみに絞り込む
-                 ->whereBetween('studied_at', [$oneMonthAgo, Carbon::now()]) // 過去1か月間のデータを取得
+                 ->whereBetween('start_time', [$oneMonthAgo, Carbon::now()]) // 過去1か月間のデータを取得
                  ->groupBy('user_id', 'study_date') // ユーザーIDと勉強日ごとにグループ化
                  ->orderBy('study_date', 'asc') // 日付で昇順にソート
                  ->get();

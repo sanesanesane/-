@@ -30,6 +30,7 @@
                                     <select class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="category_id" name="category_id">
                                         @foreach($categories as $category)
                                             <option value="{{ $category->id }}" @if($activity->category->id == $category->id) selected @endif>
+                                            <!--編集中のカテゴリIDをデフォルトで表示する。-->
                                                 {{ $category->name }}
                                             </option>
                                         @endforeach
@@ -52,10 +53,10 @@
                                 <!-- 日付入力部分 -->
                                 <div class="flex flex-wrap -mx-3 mb-6">
                                 <div class="w-full px-3"> 
-                                    <label for="studied_at" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                                    <label for="start_time" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
                                         勉強日した日</label>    
                                     <input type="date" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
-                                    id="studied_at" name="studied_at" value="{{ $activity->studied_at->format('Y-m-d') }}"> 
+                                    id="start_time" name="start_time" value="{{ $activity->start_time->format('Y-m-d') }}"> 
                                     <!---->
                                 </div>
                                 </div>

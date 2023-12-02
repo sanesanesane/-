@@ -75,8 +75,8 @@
     let data = raw_data.filter(activity => 
     //フィルター通りに取得
     {
-        const activityDate = new Date(activity.studied_at);
-        //日付の設定。newdateで(activity.studied_at)を参照する。
+        const activityDate = new Date(activity.start_time);
+        //日付の設定。newdateで(activity.start_time)を参照する。
         return activityDate.getDate() === today.getDate() &&
                activityDate.getMonth() === today.getMonth() &&
                activityDate.getFullYear() === today.getFullYear();
@@ -96,7 +96,8 @@
         // カテゴリ別にデータを集計
         if(!categories[activity.category.name]) {categories[activity.category.name] = 0;}
         //if分！（真　）｛偽　｝
-        let minutes = new Date(activity.end_time) - new Date(activity.start_time);
+        
+       let minutes = activity.duration;
         
         minutes = minutes / 1000 / 60;
         

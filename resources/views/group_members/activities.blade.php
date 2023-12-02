@@ -10,22 +10,30 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                 <div>
+                    <div class="mb-4">
                     
  <a href="{{ route('user.activities.today', ['user' => $user->id]) }}">
+                              <x-serch-button class="w-11/12 py-2"> 
     今日の勉強時間を見る
+   </x-serch-button>
 </a>
 
-                </div>
-                    <div>
-     <a href="{{ route('user.activities.week', ['user' => $user->id]) }}">週間活動を表示</a>
-     
-     </div>
-     
-     <div> 
-<a href="{{ route('user.activities.month', ['user' => $user->id]) }}">月間活動を表示</a>
-
- 
+                
+                                    
+                        <a href="{{ route('user.activities.week', ['user' => $user->id]) }}">
+                         <x-serch-button class="w-11/12 py-2">   
+                            週間活動を表示
+                            </x-serch-button>
+                        </a>
+                        
+                        <a href="{{ route('user.activities.month', ['user' => $user->id]) }}">
+                           <x-serch-button class="w-11/12 py-2">  
+                           月間活動を表示
+                            </x-serch-button>
+                        </a>
                     </div>
+                
+                    
                     
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
@@ -33,16 +41,21 @@
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">カテゴリ</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">勉強日</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">期間 (分)</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">アクション</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             @foreach($activities as $activity)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $activity->category->name ?? 'N/A' }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $activity->studied_at }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $activity->start_time}}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $activity->duration }}</td>
-                                     <td class="px-6 py-4 whitespace-nowrap">
-                                    <a href="{{ route('activities.show', $activity) }}" class="text-blue-500 hover:underline">詳細</a>
+                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <a href="{{ route('activities.show', $activity) }}">
+                                        <x-edit-button>
+                                            詳細
+                                            </x-edit-button>
+                                            </a>
                                 </tr>
                             @endforeach
                         </tbody>

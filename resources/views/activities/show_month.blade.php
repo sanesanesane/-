@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Monthly Study Time Graph') }}
+            {{ __('今月の勉強時間統計') }}
         </h2>
     </x-slot>
 
@@ -10,6 +10,22 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
+                    <div class="mb-4">
+                        <a href="{{ route('activities.index_show') }}">
+                           <x-serch-button class="w-11/12 py-2">  
+                           日
+                            </x-serch-button>
+                        </a>
+                        
+                            <a href="{{ route('activities.showMonth') }}">
+                            <x-serch-button class="w-11/12 py-2">  
+                           週
+                            </x-serch-button>   
+                            
+                        </a>
+                        
+    </div>
+                    
  
                     <div>
                         <h2>今月の勉強時間グラフ</h2>

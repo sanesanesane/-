@@ -11,13 +11,17 @@
                 <div class="p-6 text-gray-900">
                     
                  
-<div class="grid grid-rows-2 md:grid-rows-1 grid-flow-col gap-4">
+
 <!-- カテゴリによる絞り込み機能 -->
   <div class="mb-6 col-span-2">
+    <div class="grid md:grid-cols-1 grid-rows-2 sm:grid-rows-1 gap-4">
     <form method="GET" action="{{ route('activities.index') }}">
-      <div class="grid grid-rows-2 md:grid-rows-1 grid-flow-col gap-4">
+      
+    <!-- コンテンツ -->
 
-        <select name="category_id" class="col-span-3 appearance-none bg-white border border-gray-400 hover:border-gray-500 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
+
+
+        <select name="category_id" class="col-span-3 appearance-none  bg-white border border-gray-400 hover:border-gray-500 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
           <option value="">すべてのカテゴリ</option>
           @foreach($categories as $category)
             <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
@@ -30,13 +34,15 @@
         <x-serch-button type="submit" class="col-span-3">
           絞り込み
         </x-serch-button>
-      </div>
+      
     </form>
+    </div>
   </div>
 
   <!-- 日付順に並べる機能 -->
-  <div class="mb-6 col-span-1 grid-flow-col gap-4">
-    <div class="grid grid-rows-1 grid-flow-col justify-stretch">
+  <div class="grid sm:grid-cols-2 grid-cols-1 gap-4">
+
+
       <a href="{{ route('activities.index', ['sort' => 'date_asc'] + request()->except('sort')) }}" class="pr-0" >
           <x-serch-button class="w-11/12 py-2">
               日付昇順
@@ -49,7 +55,7 @@
       </a>
     </div>
   </div>
-</div>
+
 
 
                     <table class="min-w-full divide-y divide-gray-200">

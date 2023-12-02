@@ -39,12 +39,12 @@ public function showUserMonthActivities(User $user)
     $results = DB::table('activities')
                  ->select(
                      'user_id', 
-                     DB::raw('DATE(studied_at) as study_date'), 
+                     DB::raw('DATE(start_time) as study_date'), 
                      DB::raw('COALESCE(SUM(duration), 0) as total_duration')
                  )
                  ->where('user_id', $user->id) // 特定のユーザーのデータに絞り込む
                  ->where('reflect', 1) // reflectカラムが1のレコードのみ取得
-                 ->whereBetween('studied_at', [$oneMonthAgo, Carbon::now()]) // 過去1か月間のデータを取得
+                 ->whereBetween('start_time', [$oneMonthAgo, Carbon::now()]) // 過去1か月間のデータを取得
                  ->groupBy('user_id', 'study_date') // ユーザーIDと勉強日ごとにグループ化
                  ->orderBy('study_date', 'asc') // 日付で昇順にソート
                  ->get();
@@ -59,12 +59,12 @@ public function showUserweekActivities(User $user)
     $results = DB::table('activities')
                  ->select(
                      'user_id', 
-                     DB::raw('DATE(studied_at) as study_date'), 
+                     DB::raw('DATE(start_time) as study_date'), 
                      DB::raw('COALESCE(SUM(duration), 0) as total_duration')
                  )
                  ->where('user_id', $user->id) // 特定のユーザーのデータに絞り込む
                  ->where('reflect', 1) // reflectカラムが1のレコードのみ取得
-                 ->whereBetween('studied_at', [$oneWeekAgo, Carbon::now()]) 
+                 ->whereBetween('start_time', [$oneWeekAgo, Carbon::now()]) 
                  ->groupBy('user_id', 'study_date') // ユーザーIDと勉強日ごとにグループ化
                  ->orderBy('study_date', 'asc') // 日付で昇順にソート
                  ->get();
@@ -82,7 +82,7 @@ public function showUserActivitiesForToday(User $user)
                  ->join('categories', 'activities.category_id', '=', 'categories.id')
                  ->where('activities.user_id', $user->id)  // 「activities.user_id」と明示
                  ->where('reflect', 1)
-                 ->whereDate('studied_at', $today)
+                 ->whereDate('start_time', $today)
                  ->select('activities.*', 'categories.name as category_name')
                  ->get();
 

@@ -219,12 +219,12 @@ public function showchart_week(Group $group)
         $query->where('group_id', $group->id);
     })
     ->where('reflect', true)
-    ->whereBetween('studied_at', [Carbon::now()->subWeek(), Carbon::now()])
+    ->whereBetween('start_time', [Carbon::now()->subWeek(), Carbon::now()])
     ->get();
 
     // 日付ごとにアクティビティを集計
     $groupedActivities = $activities->groupBy(function ($activity) {
-        return $activity->studied_at->format('Y-m-d');
+        return $activity->start_time->format('Y-m-d');
     });
 
     // 過去7日間の全日付を生成
@@ -265,12 +265,12 @@ public function showchart_month(Group $group)
         $query->where('group_id', $group->id);
     })
     ->where('reflect', true)
-    ->whereBetween('studied_at', [Carbon::now()->subMonth(), Carbon::now()])
+    ->whereBetween('start_time', [Carbon::now()->subMonth(), Carbon::now()])
     ->get();
 
     // 日付ごとにアクティビティを集計
     $groupedActivities = $activities->groupBy(function ($activity) {
-        return $activity->studied_at->format('Y-m-d');
+        return $activity->start_time->format('Y-m-d');
     });
 
     // 過去30日間の全日付を生成
@@ -312,3 +312,4 @@ public function showchart_month(Group $group)
 
 
 }
+

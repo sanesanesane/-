@@ -54,8 +54,10 @@
                                             {{ ucfirst($group->pivot_role) }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <a href="{{ route('groups.show', $group->id) }}" class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring focus:ring-blue-200 disabled:opacity-25 transition">
+                                            <a href="{{ route('groups.show', $group->id) }}">
+                                                <x-serch-button class="w-11/12">
                                                 詳細
+                                                </x-serch-button>
                                             </a>
                                         </td>
                                     </tr>

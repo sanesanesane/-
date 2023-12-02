@@ -18,14 +18,11 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('category_id');
             $table->datetime('start_time');
-            $table->datetime('end_time');
+            $table->integer('duration')->nullable();
             $table->text('description')->nullable();
+            $table->boolean('reflect')->default(false);
             $table->timestamps();
-            $table->integer('duration')->nullable(); 
-            $table->datetime('studied_at')->nullable();
-            $table->boolean('reflect')->default(false); 
-            
-            
+
             //外部key
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('category_id')->references('id')->on('categories');
