@@ -36,10 +36,6 @@ class ActivityController extends Controller
         $query->where('category_id', $request->category_id); //クエリからカテゴリ情報のみを取得。
     }
     
-    // 絞り込まれた並び替えられたクエリ結果を取得
-    $activities = $query->get();
-   // クエリの結果を取得し、ページネーションを適用
-$activities = $query->paginate(10);
 
 
     // 並び替えのリクエストがある場合.
@@ -52,6 +48,12 @@ $activities = $query->paginate(10);
         $sortOrder = $request->sort === 'date_asc' ? 'asc' : 'desc'; // date_ascが真なら昇順。偽なら降順で並べる。
     }
     $query->orderBy('start_time', $sortOrder); //スタートタイムを参考に整列。
+    
+        // 絞り込まれた並び替えられたクエリ結果を取得
+    $activities = $query->get();
+   // クエリの結果を取得し、ページネーションを適用
+$activities = $query->paginate(10);
+
 
 
     // 結果をビューに渡す
@@ -136,21 +138,24 @@ public function update(Request $request, $id)
 }
 
 
-public function destroy($id)
+public function destroy($id) //IDを特定
 {
-    $activity = Activity::findOrFail($id);
-    if ($activity->reflect) {
-        $groups = auth()->user()->groups;
+    $activity = Activity::findOrFail($id);//IDを検索
+    
+    if ($activity->reflect)
+    {
+        $groups = auth()->user()->groups; //ユーザーとグループの情報を取得
         foreach ($groups as $group) 
         {
             
-            $group->activities()->detach($activity->id);
+            $group->activities()->detach($activity->id); //関連の削除
             $group->save();
             $group->refresh();
         }
     }
 
     $activity->delete();
+    
     return redirect()->route('activities.index')->with('success', '削除完了しました');
 }
 

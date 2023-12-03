@@ -99,7 +99,7 @@
         
        let minutes = activity.duration;
         
-        minutes = minutes / 1000 / 60;
+        //minutes = minutes / 1000 / 60;
         
         categories[activity.category.name] += minutes;
         //勉強時間を設定。
