@@ -98,11 +98,11 @@
         //if分！（真　）｛偽　｝
         
        let minutes = activity.duration;
-        
-        //minutes = minutes / 1000 / 60;
+       　//分数をactivityのdurationに設定
+       
         
         categories[activity.category.name] += minutes;
-        //勉強時間を設定。
+        //勉強時間を設定
 
         // 総勉強時間の更新
         totalMinutes += minutes;
@@ -160,7 +160,7 @@
                 y: {
                     stacked: true, //真
                     min: 0,
-                    max: totalMinutes + 40 // 総勉強時間＋40分
+                    max: totalMinutes + 20 // 総勉強時間＋20分
                 },
                 x:
                 {

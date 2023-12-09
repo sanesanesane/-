@@ -55,7 +55,7 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <a href="{{ route('groups.show', $group->id) }}">
-                                                <x-serch-button class="w-11/12">
+                                                <x-serch-button>
                                                 詳細
                                                 </x-serch-button>
                                             </a>
@@ -64,8 +64,11 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        <div>
+                         {{ $groups->links() }}
+                        <!---ペジネーション--->
+                        </div>
                     </div>
-
                 </div>
             </div>
         </div>

@@ -32,7 +32,9 @@ public function index()
         ->select('groups.*', 'group_members.user_id as pivot_user_id', 'group_members.group_id as pivot_group_id', 'group_members.role as pivot_role')
         ->where('group_members.user_id', $user_id)
         ->whereNull('groups.deleted_at')
-        ->get();
+        ->paginate(5); // 5つのアイテムごとにページ分割
+        
+    
 
     return view('groups.index', compact('groups'));
 }
@@ -45,7 +47,9 @@ public function store(Request $request)
             'required',
             'string',
             'max:255',
-            Rule::unique('groups')->where(function ($query) use ($request) {
+            Rule::unique('groups')->where(function ($query) use ($request)
+            
+            {
                 return $query->where('user_id', $request->user()->id)->whereNull('deleted_at');
             })
         ],
@@ -304,12 +308,7 @@ public function showchart_month(Group $group)
     ]);
 
 
-
 }
-
-
-
-
 
 }
 

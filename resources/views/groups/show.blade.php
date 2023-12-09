@@ -21,22 +21,32 @@
                     <div class="flex space-x-4 mt-5">
                         @if($currentUserRole == 'host')
                             <!-- ホストのアクション -->
-                            <x-danger-button onclick="location.href='{{ route('groups.statistics', $group->id) }}'">
-                                統計を見る
-                            </x-danger-button>
-                            <x-danger-button onclick="location.href='{{ route('group.members.index', $group) }}'">
-                                メンバー一覧を表示
-                            </x-danger-button>
-                            <x-danger-button onclick="location.href='{{ route('groups.edit', $group->id) }}'">
-                                グループを編集
-                            </x-danger-button>
-                            <form action="{{ route('groups.destroy', $group->id) }}" method="post" onsubmit="return confirm('本当にグループを削除しますか？');">
-                                @csrf
-                                @method('DELETE')
-                                <x-secondary-button type="submit">
-                                    グループを削除
-                                </x-secondary-button>
-                            </form>
+<a href="{{ route('groups.statistics', $group->id) }}">
+    <x-danger-button> 
+    統計を見る
+     </x-danger-button> 
+</a>
+
+<a href="{{ route('group.members.index', $group) }}" >
+    <x-danger-button>
+    メンバー一覧を表示
+    </x-danger-button> 
+</a>
+
+<a href="{{ route('groups.edit', $group->id) }}" >
+    <x-danger-button>
+    グループを編集
+    </x-danger-button>
+</a>
+
+<form action="{{ route('groups.destroy', $group->id) }}" method="post" onsubmit="return confirm('本当にグループを削除しますか？');">
+    @csrf
+    @method('DELETE')
+    <x-secondary-button type="submit">
+        グループを削除
+    </x-secondary-button>
+</form>
+
                         @elseif($currentUserRole == 'member')
                             <!-- メンバーのアクション -->
                             <x-danger-button onclick="location.href='{{ route('groups.statistics', $group->id) }}'">

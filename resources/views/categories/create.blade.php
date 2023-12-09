@@ -32,8 +32,10 @@
                             </div>
 
 
-<div class="text-left">   <!--左から書くよ-->
-    <x-danger-button>  <!--ボタンのコンポーネント-->
+<div class="text-left">   
+<!--左から書くよ-->
+    <x-danger-button>  
+    <!--ボタンのコンポーネント-->
         追加
     </x-danger-button>
 </div>

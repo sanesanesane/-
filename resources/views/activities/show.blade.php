@@ -26,10 +26,12 @@
         <div class="mb-6">
             <strong>内容:</strong> {{ $activity->description ?? '未記入' }}
         </div>
-        @if(auth()->id() === $activity->user_id) 
+        @if(auth()->id() === $activity->user_id)
+        
     <!--ログイン中のユーザーと登録ユーザーが同じの場合-->
+    
 <div class="flex space-x-10">
-
+<!--水平に間隔10で記述-->
 <div>
  <a href="{{ route('activities.edit', $activity->id) }}" >
      
@@ -40,7 +42,7 @@
 </div>
 
 <div>
-    <form action="{{ route('activities.destroy', $activity->id) }}" method="POST">
+    <form action="{{ route('activities.destroy', $activity->id) }}" method="POST" onsubmit="return confirm('このデータを削除してもよろしいですか？');">
         @csrf
         @method('DELETE')
         <x-secondary-button type="submit">

@@ -76,7 +76,7 @@
 
                                 <!-- 送信ボタン -->
                                 <div>
-                                    <x-danger-button class="w-2/3">
+                                    <x-danger-button class="py-2">
                                         登録
                                     </x-danger-button>
                                 </div>

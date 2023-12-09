@@ -18,17 +18,20 @@ class GroupMemberController extends Controller
      * @param  \App\Models\Group  $group
      * @return \Illuminate\Http\Response
      */
+
 public function index(Group $group)
 {
-    $members = $group->groupMembers;
+    // groupMembersリレーションシップのクエリに対してpaginateを適用
+    $members = $group->groupMembers()->paginate(10);
 
-    
     return view('group_members.index', ['members' => $members, 'group' => $group]);
 }
 
+
 public function showActivities(Group $group, User $user)
 {
-    $activities = $user->activities()->where('reflect', 1)->get();
+    $activities = $user->activities()->where('reflect', 1)->paginate(10);
+    
     return view('group_members.activities', ['activities' => $activities, 'user' => $user]);
 }
 
