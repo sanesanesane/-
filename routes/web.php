@@ -93,9 +93,9 @@ Route::get('/users/{user}/activities/week', [GroupMemberController::class, 'show
 // ユーザーの月間活動を表示するルート
 Route::get('/users/{user}/activities/month', [GroupMemberController::class, 'showUserMonthActivities'])
      ->name('user.activities.month');
-
+     
 Route::get('/users/{user}/activities/today', [GroupMemberController::class, 'showUserActivitiesForToday'])
-      ->name('user.activities.today');
+      ->name('user.activities.today')
 
 
 

@@ -9,6 +9,14 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
+                    <div class="flex justify-between mb-5">
+                        <h1>メンバー一覧</h1>
+                        <a href="{{ route('groups.show', $group->id) }}">
+                         <x-serch-button>
+                            戻る
+                        </x-serch-button>
+                        </a>
+                    </div>
 
                     <!-- メンバー一覧テーブル -->
                     <div class="mb-5">

@@ -90,10 +90,18 @@ public function update(Request $request, Category $category)
 
 public function destroy(Category $category)
 {
+    // 関連するデータがあるかチェック
+    if ($category->activities()->exists())
+    {
+        // 関連するデータがある場合、エラーメッセージと共にリダイレクト
+        return redirect()->route('categories.index')->with('error', '関連するデータが存在するため削除できません！');
+    }
+
+    // 関連するデータがない場合、カテゴリを削除
     $category->delete();
+
+    // 削除成功メッセージと共にリダイレクト
     return redirect()->route('categories.index')->with('success', 'カテゴリ削除しました！');
 }
-
-
 }
 

@@ -10,55 +10,62 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div class="mb-5">
-                        
-                    <a href="{{ route('categories.create') }}" >
-                    <x-danger-button>
-                        新しいカテゴリを追加
-                    </x-danger-button>
-                    </a>
-                    
+
+                        <a href="{{ route('categories.create') }}">
+                            <x-danger-button>
+                                新しいカテゴリを追加
+                            </x-danger-button>
+                        </a>
                     </div>
-                    
-                    @if(session('success')) <!--コントローラーのサクセスがあるのか確認-->
+                    @if (session('success'))
+                        <!--コントローラーのサクセスがあるのか確認-->
                         <div class="alert alert-success">
                             {{ session('success') }} <!--コントローラーのサクセスを返します。-->
                         </div>
                     @endif
 
+                    @if (session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
 
                     <table class="min-w-full divide-y divide-gray-200"> <!--テーブル-->
                         <thead><!--テーブルの目次-->
                             <tr>
-                                <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">カテゴリ名</th>
-                                <th class="px-6 py-3 bg-gray-50 text-right text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">編集</th>
+                                <th
+                                    class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                    カテゴリ名</th>
+                                <th
+                                    class="px-6 py-3 bg-gray-50 text-right text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                    編集</th>
                             </tr>
                         </thead>
-                        
                         <tbody>
-                            @foreach($categories as $category) <!--繰り返し処理-->
+                            @foreach ($categories as $category)
+                                <!--繰り返し処理-->
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-gray-900"><!--テーブルの内容1-->
+                                    <td
+                                        class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-gray-900">
+                                        <!--テーブルの内容1-->
                                         {{ $category->name }}
                                     </td>
-
                                     <td class="px-6 py-4 whitespace-no-wrap text-right text-sm leading-5 font-medium">
-                                        
-<a href="{{ route('categories.edit', $category->id) }}"> <!--カテゴリのIDを確認しそのIDの編集画面に飛ぶ-->
-<x-edit-button>
-    編集
-</x-edit-button>
-</a>
+                                        <a href="{{ route('categories.edit', $category->id) }}">
+                                            <!--カテゴリのIDを確認しそのIDの編集画面に飛ぶ-->
+                                            <x-edit-button>
+                                                編集
+                                            </x-edit-button>
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-<!-- ページネーションリンク -->
-<div>
-    {{ $categories->links() }}
-</div>
-
-
+                    <!-- ページネーションリンク -->
+                    <div>
+                        {{ $categories->links() }}
+                    </div>
                 </div>
             </div>
         </div>

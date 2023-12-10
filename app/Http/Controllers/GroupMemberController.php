@@ -19,20 +19,21 @@ class GroupMemberController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+
 public function index(Group $group)
 {
     // groupMembersリレーションシップのクエリに対してpaginateを適用
     $members = $group->groupMembers()->paginate(10);
-
     return view('group_members.index', ['members' => $members, 'group' => $group]);
 }
 
-
 public function showActivities(Group $group, User $user)
+//グループとユーザーが必要
 {
     $activities = $user->activities()->where('reflect', 1)->paginate(10);
     
-    return view('group_members.activities', ['activities' => $activities, 'user' => $user]);
+    return view('group_members.activities', ['activities' => $activities, 'user' => $user,'group' => $group]);
+    //特定のユーザーとグループの変数を送信。
 }
 
 public function showUserMonthActivities(User $user)
@@ -76,11 +77,9 @@ public function showUserweekActivities(User $user)
 }
 
 
-
-public function showUserActivitiesForToday(User $user)
+public function showUserActivitiesForToday(Group $group,User $user)
 {
     $today = Carbon::today();
-
     $results = DB::table('activities')
                  ->join('categories', 'activities.category_id', '=', 'categories.id')
                  ->where('activities.user_id', $user->id)  // 「activities.user_id」と明示
@@ -89,8 +88,9 @@ public function showUserActivitiesForToday(User $user)
                  ->select('activities.*', 'categories.name as category_name')
                  ->get();
 
-    return view('group_members.index_day', compact('results', 'user'));
+    return view('group_members.index_day', compact('results', 'user','group'));
 }
+
 
 
 
