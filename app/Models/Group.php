@@ -8,40 +8,40 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
+
 class Group extends Model
 {
     use HasFactory;
     use SoftDeletes;
     protected $fillable = ['name', 'description', 'user_id'];
-    
+    //変数可
+
 
     public function members()
     {
         return $this->belongsToMany(User::class, 'group_members')->withPivot('role');
     }
+    //userとリレーション。group_membersを中間テーブルにしroleカラムを取得。
 
     public function groupMembers()
     {
         return $this->hasMany(GroupMember::class);
     }
+    //group_membersと一対多のリレーション
 
 
-public function edit(Group $group)
-{
-    $this->authorize('update', $group);
+
+    public function activities()
+    {
+        return $this->belongsToMany(Activity::class, 'group_activities');
+    }
+    //メンバーのActivityを取得する。多数対多数のリレーション
     
-}
-
-public function users()
-{
-    return $this->belongsToMany(User::class, 'group_members')->withPivot('role');
-}
-
-public function activities()
-{
-    return $this->belongsToMany(Activity::class, 'group_activities');
-}
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'group_members')->withPivot('role');
+    }
+    
 
 
 }
-

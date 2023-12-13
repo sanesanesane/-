@@ -43,9 +43,8 @@
                                 <label for="description" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
                                     グループの説明:
                                 </label>
-                                <textarea class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="description" name="description" rows="5" required>
-                                    {{ $group->description }} <!---textareaは直接記述--->
-                                </textarea>
+                                <textarea class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="description" name="description" rows="3" required style="text-align: left;">{{$group->description }}</textarea>
+                                <!---textareaは直接記述--->
                             </div>
                         </div>
 

@@ -18,6 +18,7 @@
 
                         <!-- フォーム部分 -->
                         <div class="card-body">
+                            
                             <form action="{{ route('activities.store') }}" method="POST" class="w-full max-w-lg">
                                 @csrf
 

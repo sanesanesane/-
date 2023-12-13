@@ -9,9 +9,9 @@ class GroupMember extends Model
 
 {
     protected $table = 'group_members';
-
+    //テーブルを使用
     protected $fillable = ['user_id', 'group_id', 'role'];
-
+    //変数可能
     public function user()
     {
         return $this->belongsTo(User::class);

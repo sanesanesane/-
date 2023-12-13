@@ -11,8 +11,9 @@
                 <div class="p-6 bg-white border-b border-gray-200">
 
                     <!-- エラーメッセージ -->
-                    @if($errors->any())
-                        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    @if ($errors->any())
+                        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                            role="alert">
                             <strong class="font-bold">エラー</strong>
                             <span class="block sm:inline">
                                 @foreach ($errors->all() as $error)
@@ -21,28 +22,46 @@
                             </span>
                         </div>
                     @endif
+                    
+                    @if (session('success'))
+                        <!--コントローラーのサクセスがあるのか確認-->
+                        <div class="alert alert-success">
+                            {{ session('success') }} <!--コントローラーのサクセスを返します。-->
+                        </div>
+                    @endif
+                    
+                    @if (session('message'))
+                        <!--コントローラーのメッセージがあるのか確認-->
+                        <div class="alert alert-success">
+                            {{ session('message') }} <!--コントローラーのメッセージを返します。-->
+                        </div>
+                    @endif
 
                     <!-- グループリスト -->
                     <div class="mt-6">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         ID
                                     </th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         グループ名
                                     </th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         役割
                                     </th>
-                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th
+                                        class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         アクション
                                     </th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                @foreach($groups as $group)
+                                @foreach ($groups as $group)
                                     <tr class="hover:bg-gray-100">
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             {{ $group->id }}
@@ -56,7 +75,7 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <a href="{{ route('groups.show', $group->id) }}">
                                                 <x-serch-button>
-                                                詳細
+                                                    詳細
                                                 </x-serch-button>
                                             </a>
                                         </td>
@@ -65,8 +84,8 @@
                             </tbody>
                         </table>
                         <div>
-                         {{ $groups->links() }}
-                        <!---ペジネーション--->
+                            {{ $groups->links() }}
+                            <!---ペジネーション--->
                         </div>
                     </div>
                 </div>

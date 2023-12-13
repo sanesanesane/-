@@ -52,6 +52,7 @@ class Activity extends Model
     {
         return $this->belongsTo('App\Models\Category');
     }
+    //一対一のリレーション
 
     public function groups()
     {
@@ -78,5 +79,4 @@ class Activity extends Model
         //endtimeを計算
         return $this->start_time->addMinute($duration);
     }
-    
 }

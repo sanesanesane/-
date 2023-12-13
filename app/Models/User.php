@@ -32,6 +32,7 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+    //隠す属性
 
     /**
      * The attributes that should be cast.
@@ -41,15 +42,23 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    
-    public function groups()
-{
-    return $this->belongsToMany(Group::class, 'group_members')->withPivot('role');
-}
+    //日付設定
 
-public function activities()
-{
-    return $this->hasMany(Activity::class);
-}
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class, 'group_members')->withPivot('role');
+    }
+    //多数対多数のリレーション
+
+    public function activities()
+    {
+        return $this->hasMany(Activity::class);
+    }
+    //一対多数
+    
+    public function owner_groups()
+    {
+        return $this->hasMany(Group::class);
+    }
 
 }

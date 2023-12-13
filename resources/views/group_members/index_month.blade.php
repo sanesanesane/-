@@ -9,11 +9,20 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
- 
+                    
+                    <div class="flex justify-between mb-5">
+                        <h1>今月の勉強時間グラフ</h1>
+                        <a href="{{ route('group.members.activities', ['group' => $group->id, 'user' => $user->id]) }}">
+                            <x-edit-button>
+                                戻る
+                            </x-edit-button>
+                        </a>
+                    </div>
+                    
                     <div>
-                        <h2>今月の勉強時間グラフ</h2>
                         <canvas id="monthlyStudyChart"></canvas>
                     </div>
+                    
                     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                     <script>
                         const rawData = @json($results);
@@ -23,14 +32,16 @@
                         const daysInMonth = new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0).getDate();
 
                         // 全日にわたってラベルを生成し、勉強時間を0で初期化
-                        for (let day = 1; day <= daysInMonth; day++) {
+                        for (let day = 1; day <= daysInMonth; day++) 
+                        {
                             const date = `${endDate.getFullYear()}-${String(endDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                             studyDates.push(date);
                             studyTimes.push(0); // 初期値として0をセット
                         }
-
+                        
                         // rawDataからデータを取得してstudyTimesに反映
-                        rawData.forEach(record => {
+                        rawData.forEach(record => 
+                        {
                             const index = studyDates.indexOf(record.study_date);
                             if (index !== -1) {
                                 studyTimes[index] = record.total_duration;
@@ -38,9 +49,11 @@
                         });
 
                         const ctx = document.getElementById('monthlyStudyChart').getContext('2d');
-                        const myChart = new Chart(ctx, {
+                        const myChart = new Chart(ctx, 
+                        {
                             type: 'line',
-                            data: {
+                            data:
+                            {
                                 labels: studyDates,
                                 datasets: [{
                                     label: '勉強時間 (分)',
@@ -51,7 +64,8 @@
                                     fill: false
                                 }]
                             },
-                            options: {
+                            options: 
+                            {
                                 scales: {
                                     y: {
                                         beginAtZero: true

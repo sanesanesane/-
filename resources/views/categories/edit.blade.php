@@ -11,11 +11,14 @@
 
                 <div class="p-6 text-gray-900">
                     <div class="card-body">
-                        <!-- エラーメッセージの表示 -->
                         @if ($errors->has('name'))
                             <!-- エラーチェックの開始 -->
-                            <div class="alert alert-danger"> <!-- エラーメッセージのコンテナ -->
+                            <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                                 <!-- エラーメッセージのコンテナ -->
+                                 <strong class="font-bold">エラー</strong>
+                                 <span class="block sm:inline">
                                 {{ $errors->first('name') }} <!--エラーのうちのnameの最初の分を表示する。-->
+                                </span>
                             </div>
                         @endif
 

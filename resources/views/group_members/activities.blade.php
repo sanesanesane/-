@@ -11,33 +11,31 @@
                 <div class="p-6 bg-white border-b border-gray-200">
 
                     <div class="mb-4">
-
-                        <a href="{{ route('user.activities.today', ['group' => $groupId,'user' => $user->id]) }}">
+                            <a href="{{ route('user.members.activities', ['group' => $group->id, 'user' => $user->id]) }}">
                             <!---特定のユーザーIDに飛ぶ--->
                             <x-serch-button class="py-2">
                                 今日の勉強時間を見る
                             </x-serch-button>
                         </a>
 
-                        <a href="{{ route('user.activities.week', ['user' => $user->id]) }}">
+                        <a href="{{ route('user.activities.week', ['group' => $group->id, 'user' => $user->id]) }}">
                             <x-serch-button class="py-2">
                                 週間活動を表示
                             </x-serch-button>
                         </a>
 
-                        <a href="{{ route('user.activities.month', ['user' => $user->id]) }}">
+                        <a href="{{ route('user.activities.month', ['group' => $group->id, 'user' => $user->id]) }}">
                             <x-serch-button class="py-2">
                                 月間活動を表示
                             </x-serch-button>
                         </a>
                         <a href="{{ route('group.members.index', $group) }}">
-    <x-danger-button class="py-2">
-        メンバー一覧に戻る
-    </x-danger-button> 
-</a>
-
+                            <x-danger-button class="py-2">
+                                メンバー一覧に戻る
+                            </x-danger-button>
+                        </a>
                     </div>
-                    
+
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
