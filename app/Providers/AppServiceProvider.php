@@ -23,8 +23,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-       \URL::forceScheme('https'); //追加
-       $this->app['request']->server->set('HTTPS','on');
+       \URL::forceScheme('http'); //追加
+       $this->app['request']->server->set('HTTP','on');
        
     }
 }
