@@ -21,10 +21,5 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
-    {
-       \URL::forceScheme('http'); //追加
-       $this->app['request']->server->set('HTTP','on');
-       
-    }
+
 }

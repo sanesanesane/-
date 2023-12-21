@@ -1,5 +1,5 @@
 <?php
-URL::forceScheme('http');
+URL::forceScheme('https');
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
